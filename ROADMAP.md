@@ -9,8 +9,9 @@ Each phase is independently deployable and delivers real value. Phases 1–4 are
 Auth, songs, audio upload & playback.
 
 - [ ] **Authentication (Users)**
-  - [ ] `User` model with email, name, `has_secure_password`
-  - [ ] Session controller with login/logout
+  - [ ] `User` model (email, name, provider, uid)
+  - [ ] Google OAuth2 via OmniAuth (`omniauth-google-oauth2`)
+  - [ ] Session controller handling OAuth callback and logout
   - [ ] Authentication concern for controllers
 
 - [ ] **Songs**

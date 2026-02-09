@@ -20,6 +20,7 @@ Refer to `ROADMAP.md` for the phased delivery plan. Mark tasks as complete in th
 - **WebSockets:** Solid Cable
 - **Deployment:** Kamal (Docker-based), Thruster
 - **Testing:** RSpec, Capybara, Selenium
+- **Authentication:** Google OAuth2 via OmniAuth (`omniauth-google-oauth2`)
 - **Linting:** RuboCop (Rails Omakase style), Brakeman (security)
 
 ## Design Principles
