@@ -36,7 +36,7 @@ These principles from `CONCEPT.md` should guide all implementation decisions:
 
 The core domain concepts are:
 
-- **People** — members of the collective; all interaction is internal by default
+- **Users** — members of the collective; all interaction is internal by default
 - **Songs** — the identity of a piece of music; an anchor for related creative work
 - **Artefacts** — audio files associated with a song, typed as:
   - **Mix** — a listenable representation at a point in time

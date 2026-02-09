@@ -37,7 +37,7 @@ Features exist to reduce cognitive load, not to define how people must work.
 
 ## Conceptual Model
 
-### People
+### Users
 
 * Members of the collective
 * All interaction is internal by default

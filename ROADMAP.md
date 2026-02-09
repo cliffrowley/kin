@@ -8,8 +8,8 @@ Each phase is independently deployable and delivers real value. Phases 1–4 are
 
 Auth, songs, audio upload & playback.
 
-- [ ] **Authentication (People)**
-  - [ ] `Person` model with email, name, `has_secure_password`
+- [ ] **Authentication (Users)**
+  - [ ] `User` model with email, name, `has_secure_password`
   - [ ] Session controller with login/logout
   - [ ] Authentication concern for controllers
   - [ ] Tests for all auth functionality
@@ -45,7 +45,7 @@ Artefact hierarchy, comments, and song metadata.
   - [ ] Tests for attachment relationships and scoping
 
 - [ ] **Feedback (Comments)**
-  - [ ] `Comment` model (belongs_to :artefact, belongs_to :person, body)
+  - [ ] `Comment` model (belongs_to :artefact, belongs_to :user, body)
   - [ ] Comment thread UI on artefact detail
   - [ ] Turbo Streams for live comment updates
   - [ ] Tests for commenting
@@ -62,7 +62,7 @@ Artefact hierarchy, comments, and song metadata.
 Grouping songs and improving the browsing experience.
 
 - [ ] **Collections**
-  - [ ] `Collection` model (title, description, personal flag, belongs_to :person for personal)
+  - [ ] `Collection` model (title, description, personal flag, belongs_to :user for personal)
   - [ ] `CollectionSong` join model
   - [ ] Collections CRUD; add/remove songs
   - [ ] Songs can appear in multiple collections
@@ -81,7 +81,7 @@ Grouping songs and improving the browsing experience.
 Making shared attention visible.
 
 - [ ] **Listen Tracking**
-  - [ ] `Listen` model (belongs_to :artefact, belongs_to :person, timestamp)
+  - [ ] `Listen` model (belongs_to :artefact, belongs_to :user, timestamp)
   - [ ] Record listens via Stimulus controller on play
   - [ ] Non-blocking, Turbo-friendly
   - [ ] Tests for listen recording
