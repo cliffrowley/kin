@@ -6,6 +6,8 @@ KIN is a shared hub for a music collective — a calm external memory and attent
 
 Refer to `CONCEPT.md` for the full product vision, design principles, and conceptual model.
 
+Refer to `ROADMAP.md` for the phased delivery plan. Mark tasks as complete in the roadmap as work is finished.
+
 ## Tech Stack
 
 - **Framework:** Ruby on Rails 8.0 (module name: `Kin`)
@@ -125,4 +127,4 @@ KIN treats musical metadata as **human-owned**, not machine-owned. AI is only a 
 
 ## Living Documentation
 
-This file, `CONCEPT.md`, and `README.md` are living documents. When development work changes the domain model, introduces new conventions, or shifts the product's scope, propose updates to the relevant documents as part of the work.
+This file, `CONCEPT.md`, `ROADMAP.md`, and `README.md` are living documents. When development work changes the domain model, introduces new conventions, or shifts the product's scope, propose updates to the relevant documents as part of the work. Mark tasks as complete in `ROADMAP.md` as they are finished.
