@@ -19,7 +19,7 @@ Refer to `ROADMAP.md` for the phased delivery plan. Mark tasks as complete in th
 - **Caching:** Solid Cache
 - **WebSockets:** Solid Cable
 - **Deployment:** Kamal (Docker-based), Thruster
-- **Testing:** Minitest, Capybara, Selenium
+- **Testing:** RSpec, Capybara, Selenium
 - **Linting:** RuboCop (Rails Omakase style), Brakeman (security)
 
 ## Design Principles
@@ -72,13 +72,13 @@ Artefacts may be **attached** to other artefacts (derivation/support relationshi
 
 - **Write the test first**, then write the minimum code to make it pass, then refactor
 - Every model, controller, job, mailer, and service must have corresponding test coverage
-- Write tests using Minitest (not RSpec)
-- Place tests in the standard `test/` directory structure
-- Use system tests (Capybara + Selenium) for integration/UI testing
-- Use fixtures for test data
-- When adding a feature: start with a failing test that describes the desired behaviour
-- When fixing a bug: start with a failing test that reproduces it
-- When refactoring: ensure existing tests pass before and after
+- Write tests using RSpec (not Minitest)
+- Place specs in the standard `spec/` directory structure
+- Use system specs (Capybara + Selenium) for integration/UI testing
+- Use fixtures (or factories) for test data
+- When adding a feature: start with a failing spec that describes the desired behaviour
+- When fixing a bug: start with a failing spec that reproduces it
+- When refactoring: ensure existing specs pass before and after
 
 ### Database
 
@@ -113,8 +113,8 @@ KIN treats musical metadata as **human-owned**, not machine-owned. AI is only a 
 ## Development
 
 - Run the dev server: `bin/dev` (starts Rails server + Tailwind watcher via `Procfile.dev`)
-- Run tests: `bin/rails test`
-- Run system tests: `bin/rails test:system`
+- Run tests: `bundle exec rspec`
+- Run system tests: `bundle exec rspec spec/system`
 - Run linter: `bin/rubocop`
 - Run security scan: `bin/brakeman`
 - Database setup: `bin/rails db:setup`
