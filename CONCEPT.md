@@ -169,13 +169,13 @@ KIN supports **external sharing via KIN-issued links**.
 
 External sharing exists to:
 
-* share a specific mix with someone outside the collective
+* share a specific artefact with someone outside the collective
 * gather informal feedback or interest
 * do so without onboarding external users or exposing the wider archive
 
 ### Share Links
 
-* Share links point to a single mix
+* Share links point to a single artefact
 * Links are capability-based (unguessable URLs)
 * Links may be time-limited or indefinite
 * Links can be revoked at any time
