@@ -47,6 +47,17 @@ The core domain concepts are:
 
 Artefacts may be **attached** to other artefacts (derivation/support relationships). A song may have a designated **main mix**.
 
+## Workflow
+
+- **Approach each section of a roadmap phase as a separate unit of work** — plan, test, implement, and complete one section before moving on to the next
+- Do not attempt an entire phase in one go
+
+## Engineering Principles
+
+- **KISS** — Keep it simple; prefer straightforward solutions over clever ones
+- **YAGNI** — Don't build what isn't needed yet; stick to what the current task requires
+- Do not pre-empt future requirements or add speculative features, fields, or abstractions
+
 ## Code Conventions
 
 ### Rails
