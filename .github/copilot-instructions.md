@@ -117,6 +117,12 @@ KIN treats musical metadata as **human-owned**, not machine-owned. AI is only a 
 - Run security scan: `bin/brakeman`
 - Database setup: `bin/rails db:setup`
 
+## Git Workflow
+
+- All feature and bug fix work is done in branches off `main`
+- Branches are merged into `main` via GitHub pull requests
+- Do not commit directly to `main`
+
 ## Living Documentation
 
 This file, `CONCEPT.md`, and `README.md` are living documents. When development work changes the domain model, introduces new conventions, or shifts the product's scope, propose updates to the relevant documents as part of the work.
