@@ -64,12 +64,19 @@ Artefacts may be **attached** to other artefacts (derivation/support relationshi
 - Prefer DaisyUI semantic component classes (e.g. `btn`, `card`, `modal`) over raw Tailwind where a suitable component exists
 - Keep the UI calm, minimal, and low-friction — reflecting the product's design ethos
 
-### Testing
+### Testing — TDD, Always
 
+**Test-driven development is mandatory.** No production code is written without tests.
+
+- **Write the test first**, then write the minimum code to make it pass, then refactor
+- Every model, controller, job, mailer, and service must have corresponding test coverage
 - Write tests using Minitest (not RSpec)
 - Place tests in the standard `test/` directory structure
 - Use system tests (Capybara + Selenium) for integration/UI testing
 - Use fixtures for test data
+- When adding a feature: start with a failing test that describes the desired behaviour
+- When fixing a bug: start with a failing test that reproduces it
+- When refactoring: ensure existing tests pass before and after
 
 ### Database
 
@@ -109,3 +116,7 @@ KIN treats musical metadata as **human-owned**, not machine-owned. AI is only a 
 - Run linter: `bin/rubocop`
 - Run security scan: `bin/brakeman`
 - Database setup: `bin/rails db:setup`
+
+## Living Documentation
+
+This file, `CONCEPT.md`, and `README.md` are living documents. When development work changes the domain model, introduces new conventions, or shifts the product's scope, propose updates to the relevant documents as part of the work.
