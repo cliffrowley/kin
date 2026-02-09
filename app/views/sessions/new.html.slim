@@ -1,0 +1,6 @@
+section.flex.items-center.justify-center.min-h-screen
+  .card.bg-base-200.shadow-xl.w-96
+    .card-body.items-center.text-center
+      h1.card-title.text-3xl.mb-2 KIN
+      p.text-base-content.opacity-70.mb-6 A shared space for the collective.
+      = button_to "Sign in with Google", "/auth/google_oauth2", method: :post, data: { turbo: false }, class: "btn btn-primary btn-wide"
