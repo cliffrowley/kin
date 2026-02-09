@@ -51,6 +51,7 @@ Artefacts may be **attached** to other artefacts (derivation/support relationshi
 
 - **Approach each section of a roadmap phase as a separate unit of work** — plan, test, implement, and complete one section before moving on to the next
 - Do not attempt an entire phase in one go
+- **Plan before implementing** — at the start of each unit of work, present a clear plan to the user describing what will be built, the key design decisions, and the steps involved. Wait for the user to approve or adjust the plan before writing any code.
 
 ## Engineering Principles
 
@@ -135,6 +136,18 @@ KIN treats musical metadata as **human-owned**, not machine-owned. AI is only a 
 - All feature and bug fix work is done in branches off `main`
 - Branches are merged into `main` via GitHub pull requests
 - Do not commit directly to `main`
+
+### Mandatory Branch Procedure
+
+**Before making any code changes**, you MUST:
+
+1. Check the current branch (`git branch --show-current`)
+2. If on `main`, create and switch to a descriptive feature branch (e.g. `git checkout -b feature/authentication`)
+3. Only then begin making changes
+
+Branch naming convention: `feature/<short-description>` for new work, `fix/<short-description>` for bug fixes.
+
+Commit early and often with clear, concise commit messages. Do not batch all changes into a single commit at the end.
 
 ## Living Documentation
 
