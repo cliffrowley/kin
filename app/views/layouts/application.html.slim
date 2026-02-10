@@ -33,12 +33,12 @@ html data-theme="dark"
           = button_to "Sign out", logout_path, method: :delete, class: "btn btn-ghost btn-sm"
 
     - if flash[:notice]
-      .toast.toast-top.toast-end
+      .toast.toast-top.toast-end data-controller="toast"
         .alert.alert-success
           span = flash[:notice]
 
     - if flash[:alert]
-      .toast.toast-top.toast-end
+      .toast.toast-top.toast-end data-controller="toast"
         .alert.alert-warning
           span = flash[:alert]
 

@@ -1,0 +1,61 @@
+require "rails_helper"
+
+RSpec.describe "Toast auto-dismiss", type: :system do
+  let!(:user) { create(:user) }
+
+  before do
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+      provider: user.provider,
+      uid: user.uid,
+      info: {
+        email: user.email,
+        name: user.name
+      }
+    )
+  end
+
+  after do
+    OmniAuth.config.mock_auth[:google_oauth2] = nil
+  end
+
+  context "when JavaScript is enabled", js: true do
+    it "auto-dismisses success toast after a few seconds" do
+      visit login_path
+      click_button "Sign in with Google"
+
+      # Toast should be visible initially
+      expect(page).to have_text("Signed in successfully.")
+
+      # Wait for auto-dismiss (3 seconds + fade-out time)
+      sleep 4
+
+      # Toast should be gone
+      expect(page).not_to have_text("Signed in successfully.")
+    end
+
+    it "auto-dismisses alert toast after a few seconds" do
+      # Sign in first
+      visit login_path
+      click_button "Sign in with Google"
+
+      # Create a song to trigger a notice toast, then delete it
+      visit songs_path
+      click_link "New song"
+      fill_in "Title", with: "Test Song"
+      click_button "Create Song"
+
+      # Now sign out to get a different toast
+      click_button "Sign out"
+
+      # Toast should be visible initially
+      expect(page).to have_text("Signed out.")
+
+      # Wait for auto-dismiss
+      sleep 4
+
+      # Toast should be gone
+      expect(page).not_to have_text("Signed out.")
+    end
+  end
+end
