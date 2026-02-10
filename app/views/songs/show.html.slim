@@ -49,65 +49,16 @@
 h2.text-xl.font-semibold.mb-4 Artefacts
 
 - artefacts = @song.artefacts.top_level
-- if artefacts.any?
-  .space-y-3
-    - artefacts.each do |artefact|
-      .card.bg-base-200 class=("ring-1 ring-primary" if artefact == @song.main_artefact)
-        .card-body.p-4
-          .flex.justify-between.items-start
-            div
-              .flex.items-center.gap-2
-                .font-medium = artefact.title
-                - if artefact == @song.main_artefact
-                  span.badge.badge-primary.badge-sm main artefact
-              - if artefact.notes.present?
-                p.text-sm.opacity-70.mt-1 = artefact.notes
-            .flex.gap-1.flex-shrink-0
-              - if artefact != @song.main_artefact
-                = button_to "Set as main artefact", song_main_artefact_path(@song), params: { artefact_id: artefact.id }, method: :patch, class: "btn btn-ghost btn-xs"
-              = button_to "Delete", song_artefact_path(@song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
-          - if artefact.audio.attached?
-            .mt-3
-              audio controls="" preload="metadata" class="w-full"
-                source src=url_for(artefact.audio) type=artefact.audio.content_type
-          /! Child artefacts
-          - if artefact.artefacts.any?
-            details.mt-3
-              summary.cursor-pointer.text-sm.opacity-70.select-none
-                | #{artefact.artefacts.size} attached #{"artefact".pluralize(artefact.artefacts.size)}
-              .ml-4.mt-2.space-y-2
-                - artefact.artefacts.each do |child|
-                  .card.bg-base-300
-                    .card-body.p-3
-                      .flex.justify-between.items-start
-                        div
-                          .flex.items-center.gap-2
-                            .font-medium.text-sm = child.title
-                          - if child.notes.present?
-                            p.text-xs.opacity-70.mt-1 = child.notes
-                        .flex.gap-1.flex-shrink-0
-                          = button_to "Delete", song_artefact_path(@song, child), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
-                      - if child.audio.attached?
-                        .mt-2
-                          audio controls="" preload="metadata" class="w-full"
-                            source src=url_for(child.audio) type=child.audio.content_type
-          /! Artefact comments
-          - if artefact.comments.any? || true
-            details.mt-3
-              summary.cursor-pointer.text-sm.opacity-70.select-none
-                - count = artefact.comments.size
-                - if count > 0
-                  | #{count} #{"comment".pluralize(count)}
-                - else
-                  | Comments
-              .mt-2
-                div id=dom_id(artefact, :comments)
-                  - artefact.comments.each do |comment|
-                    div id=dom_id(comment)
-                      .chat class=("chat-end" if comment.user == current_user) class=("chat-start" unless comment.user == current_user)
-                        = render "comments/comment", comment: comment
-                .mt-2 id=dom_id(artefact, :comment_form)
-                  = render "comments/form", url: song_artefact_comments_path(@song, artefact), placeholder: "Comment on this artefact..."
+
+div id=dom_id(@song, :artefacts)
+  - if artefacts.any?
+    .space-y-3
+      - artefacts.each do |artefact|
+        = render "artefacts/artefact", artefact: artefact
+
+.mt-4
+  = turbo_frame_tag dom_id(@song, :new_artefact) do
+    = link_to "Add artefact", new_song_artefact_path(@song), class: "btn btn-ghost btn-sm", data: { turbo_frame: dom_id(@song, :new_artefact) }
 
 /! Song comments
 .divider
@@ -122,36 +73,3 @@ div id=dom_id(@song, :comments)
 
 .mt-4 id=dom_id(@song, :comment_form)
   = render "comments/form", url: song_comments_path(@song), placeholder: "Comment on this song..."
-
-/! Upload form
-.divider
-h3.text-lg.font-semibold.mb-4 Upload Artefact
-
-= form_with model: @artefact, url: song_artefacts_path(@song), class: "space-y-4" do |f|
-  - if @artefact.errors.any?
-    .alert.alert-error.mb-4
-      ul
-        - @artefact.errors.full_messages.each do |msg|
-          li = msg
-
-  .form-control
-    label.label
-      span.label-text Title
-    = f.text_field :title, class: "input input-bordered w-full", placeholder: "e.g. Rough mix v2"
-
-  .form-control
-    label.label
-      span.label-text Attach to (optional)
-    = select_tag "artefact[parent_id]", options_for_select(@parent_artefacts.map { |a| [a.title, a.id] }), include_blank: "None (top-level)", class: "select select-bordered w-full"
-
-  .form-control
-    label.label
-      span.label-text Audio file
-    = f.file_field :audio, accept: "audio/*", class: "file-input file-input-bordered w-full"
-
-  .form-control
-    label.label
-      span.label-text Notes (optional)
-    = f.text_area :notes, class: "textarea textarea-bordered w-full", rows: 2, placeholder: "Any notes about this artefact..."
-
-  = f.submit "Upload", class: "btn btn-primary"

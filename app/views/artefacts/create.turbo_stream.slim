@@ -1,0 +1,9 @@
+/ Append the new artefact to the list
+- artefactable = @parent || @song
+= turbo_stream.append dom_id(artefactable, :artefacts) do
+  = render "artefacts/artefact", artefact: @artefact
+
+/ Replace the form frame with the "Add artefact" link again
+= turbo_stream.replace dom_id(artefactable, :new_artefact) do
+  = turbo_frame_tag dom_id(artefactable, :new_artefact) do
+    = link_to "Add artefact", new_song_artefact_path(@song, parent_id: @parent&.id), class: "btn btn-ghost btn-xs", data: { turbo_frame: dom_id(artefactable, :new_artefact) }
