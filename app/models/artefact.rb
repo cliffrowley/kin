@@ -2,6 +2,7 @@ class Artefact < ApplicationRecord
   belongs_to :song
   belongs_to :parent, class_name: "Artefact", optional: true
   has_many :children, class_name: "Artefact", foreign_key: :parent_id, dependent: :nullify
+  has_many :comments, as: :commentable, dependent: :destroy
   has_one :main_mix_song, class_name: "Song", foreign_key: :main_mix_id, dependent: :nullify
 
   has_one_attached :audio

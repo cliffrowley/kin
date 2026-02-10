@@ -1,0 +1,9 @@
+.chat-bubble class=("chat-bubble-primary" if comment.user == current_user)
+  .flex.justify-between.items-start.gap-4
+    div
+      .flex.items-center.gap-2.mb-1
+        span.font-semibold.text-sm = comment.user.name
+        span.text-xs.opacity-50 = time_ago_in_words(comment.created_at) + " ago"
+      p.text-sm.whitespace-pre-wrap = comment.body
+    - if comment.user == current_user
+      = button_to "×", song_comment_path(comment.commentable.is_a?(Song) ? comment.commentable : comment.commentable.song, comment), method: :delete, class: "btn btn-ghost btn-xs opacity-50 hover:opacity-100", data: { turbo_confirm: "Delete this comment?" }

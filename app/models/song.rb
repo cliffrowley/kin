@@ -1,6 +1,7 @@
 class Song < ApplicationRecord
   belongs_to :creator, class_name: "User"
   has_many :artefacts, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
   belongs_to :main_mix, class_name: "Artefact", optional: true
 
   validates :title, presence: true

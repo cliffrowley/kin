@@ -1,0 +1,3 @@
+= form_with model: Comment.new, url: url, class: "flex gap-2 items-start" do |f|
+  = f.text_area :body, class: "textarea textarea-bordered textarea-sm flex-1", rows: 1, placeholder: placeholder || "Add a comment..."
+  = f.submit "Post", class: "btn btn-primary btn-sm"
