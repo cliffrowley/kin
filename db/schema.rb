@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_10_012900) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_10_014227) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -51,6 +51,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_012900) do
     t.index ["song_id"], name: "index_artefacts_on_song_id"
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.text "body", null: false
+    t.integer "commentable_id", null: false
+    t.string "commentable_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
   create_table "songs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
@@ -77,6 +88,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_012900) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "artefacts", "artefacts", column: "parent_id"
   add_foreign_key "artefacts", "songs"
+  add_foreign_key "comments", "users"
   add_foreign_key "songs", "artefacts", column: "main_mix_id"
   add_foreign_key "songs", "users", column: "creator_id"
 end
