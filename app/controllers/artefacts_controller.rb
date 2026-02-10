@@ -19,7 +19,7 @@ class ArtefactsController < ApplicationController
         format.html { redirect_to @song, notice: "Artefact was successfully updated." }
       end
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -34,7 +34,7 @@ class ArtefactsController < ApplicationController
         format.html { redirect_to @song, notice: "Artefact was successfully uploaded." }
       end
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

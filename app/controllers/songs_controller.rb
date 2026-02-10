@@ -19,7 +19,7 @@ class SongsController < ApplicationController
     if @song.save
       redirect_to @song, notice: "Song was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -30,7 +30,7 @@ class SongsController < ApplicationController
     if @song.update(song_params)
       redirect_to @song, notice: "Song was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

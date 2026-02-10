@@ -84,7 +84,7 @@ RSpec.describe "Songs", type: :request do
 
       it "renders the new form" do
         post songs_path, params: { song: { title: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -128,7 +128,7 @@ RSpec.describe "Songs", type: :request do
 
       it "renders the edit form" do
         patch song_path(song), params: { song: { title: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

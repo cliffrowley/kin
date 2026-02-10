@@ -111,11 +111,11 @@ RSpec.describe "Artefacts", type: :request do
         }.not_to change(Artefact, :count)
       end
 
-      it "responds with unprocessable_entity" do
+      it "responds with unprocessable_content" do
         post song_artefacts_path(song), params: {
           artefact: { title: "" }
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -172,9 +172,9 @@ RSpec.describe "Artefacts", type: :request do
         expect(artefact.reload.title).to eq("Original")
       end
 
-      it "responds with unprocessable_entity" do
+      it "responds with unprocessable_content" do
         patch song_artefact_path(song, artefact), params: { artefact: { title: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
