@@ -22,6 +22,6 @@ Rails.application.routes.draw do
       resources :comments, only: %i[create], module: :artefacts
     end
     resources :comments, only: %i[create destroy]
-    resource :main_mix, only: %i[update destroy]
+    resource :main_artefact, only: %i[update destroy]
   end
 end

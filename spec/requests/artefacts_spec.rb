@@ -46,19 +46,19 @@ RSpec.describe "Artefacts", type: :request do
       end
 
       it "creates an artefact with a parent" do
-        parent = create(:artefact, song: song)
+        parent = create(:artefact, artefactable: song)
         post song_artefacts_path(song), params: {
           artefact: { title: "Guitar Part", parent_id: parent.id }
         }
         child = Artefact.find_by(title: "Guitar Part")
-        expect(child.parent).to eq(parent)
+        expect(child.artefactable).to eq(parent)
       end
 
       it "creates an artefact without a parent" do
         post song_artefacts_path(song), params: {
           artefact: { title: "Standalone Mix" }
         }
-        expect(Artefact.last.parent_id).to be_nil
+        expect(Artefact.last.artefactable).to eq(song)
       end
     end
 
@@ -82,14 +82,14 @@ RSpec.describe "Artefacts", type: :request do
 
   describe "DELETE /songs/:song_id/artefacts/:id" do
     it "destroys the artefact" do
-      artefact = create(:artefact, song: song)
+      artefact = create(:artefact, artefactable: song)
       expect {
         delete song_artefact_path(song, artefact)
       }.to change(Artefact, :count).by(-1)
     end
 
     it "redirects to the song page" do
-      artefact = create(:artefact, song: song)
+      artefact = create(:artefact, artefactable: song)
       delete song_artefact_path(song, artefact)
       expect(response).to redirect_to(song_path(song))
     end

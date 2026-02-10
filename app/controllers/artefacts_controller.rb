@@ -2,7 +2,12 @@ class ArtefactsController < ApplicationController
   before_action :set_song
 
   def create
-    @artefact = @song.artefacts.build(artefact_params)
+    @artefact = if params[:artefact][:parent_id].present?
+      parent = @song.artefacts.find(params[:artefact][:parent_id])
+      parent.artefacts.build(artefact_params_without_parent)
+    else
+      @song.artefacts.build(artefact_params_without_parent)
+    end
 
     if @artefact.save
       redirect_to @song, notice: "Artefact was successfully uploaded."
@@ -24,7 +29,7 @@ class ArtefactsController < ApplicationController
     @song = Song.find(params[:song_id])
   end
 
-  def artefact_params
-    params.require(:artefact).permit(:title, :notes, :audio, :parent_id)
+  def artefact_params_without_parent
+    params.require(:artefact).permit(:title, :notes, :audio)
   end
 end

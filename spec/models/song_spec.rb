@@ -11,37 +11,37 @@ RSpec.describe Song, type: :model do
 
     it "has many artefacts" do
       song = create(:song)
-      create(:artefact, song: song)
-      create(:artefact, song: song)
+      create(:artefact, artefactable: song)
+      create(:artefact, artefactable: song)
 
       expect(song.artefacts.count).to eq(2)
     end
 
     it "destroys artefacts when destroyed" do
       song = create(:song)
-      create(:artefact, song: song)
+      create(:artefact, artefactable: song)
 
       expect { song.destroy }.to change(Artefact, :count).by(-1)
     end
 
-    it "has an optional main_mix reference to an artefact" do
+    it "has an optional main_artefact reference to an artefact" do
       song = create(:song)
-      expect(song.main_mix).to be_nil
+      expect(song.main_artefact).to be_nil
     end
 
-    it "can have a main mix set" do
+    it "can have a main artefact set" do
       song = create(:song)
-      mix = create(:artefact, song: song)
-      song.update!(main_mix: mix)
-      expect(song.reload.main_mix).to eq(mix)
+      mix = create(:artefact, artefactable: song)
+      song.update!(main_artefact: mix)
+      expect(song.reload.main_artefact).to eq(mix)
     end
 
-    it "nullifies main_mix when the artefact is destroyed" do
+    it "nullifies main_artefact when the artefact is destroyed" do
       song = create(:song)
-      mix = create(:artefact, song: song)
-      song.update!(main_mix: mix)
+      mix = create(:artefact, artefactable: song)
+      song.update!(main_artefact: mix)
       mix.destroy
-      expect(song.reload.main_mix).to be_nil
+      expect(song.reload.main_artefact).to be_nil
     end
   end
 
@@ -62,13 +62,13 @@ RSpec.describe Song, type: :model do
       expect(song).not_to be_valid
     end
 
-    it "is invalid if main_mix does not belong to the song" do
+    it "is invalid if main_artefact does not belong to the song" do
       song = create(:song)
       other_song = create(:song, creator: create(:user))
-      mix = create(:artefact, song: other_song)
-      song.main_mix = mix
+      mix = create(:artefact, artefactable: other_song)
+      song.main_artefact = mix
       expect(song).not_to be_valid
-      expect(song.errors[:main_mix]).to include("must belong to this song")
+      expect(song.errors[:main_artefact]).to include("must belong to this song")
     end
   end
 

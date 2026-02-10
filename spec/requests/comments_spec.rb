@@ -51,7 +51,7 @@ RSpec.describe "Comments", type: :request do
   end
 
   describe "POST /songs/:song_id/artefacts/:artefact_id/comments (artefact-level)" do
-    let(:artefact) { create(:artefact, song: song) }
+    let(:artefact) { create(:artefact, artefactable: song) }
 
     context "with valid params" do
       it "creates a comment on the artefact" do
