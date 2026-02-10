@@ -18,7 +18,10 @@ Rails.application.routes.draw do
   root "dashboard#show"
 
   resources :songs do
-    resources :artefacts, only: %i[create destroy]
+    resources :artefacts, only: %i[create destroy] do
+      resources :comments, only: %i[create], module: :artefacts
+    end
+    resources :comments, only: %i[create destroy]
     resource :main_mix, only: %i[update destroy]
   end
 end
