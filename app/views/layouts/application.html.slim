@@ -24,8 +24,10 @@ html data-theme="dark"
   body
     - if logged_in?
       .navbar.bg-base-200
-        .flex-1
+        .flex-1.flex.items-center.gap-4
           a.btn.btn-ghost.text-xl href=root_path KIN
+          nav.flex.gap-2
+            = link_to "Songs", songs_path, class: "btn btn-ghost btn-sm"
         .flex-none.flex.items-center.gap-2
           / span.text-sm.opacity-70 = current_user.name
           = button_to "Sign out", logout_path, method: :delete, class: "btn btn-ghost btn-sm"

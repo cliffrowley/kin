@@ -1,0 +1,16 @@
+.mb-6
+  = link_to "← Back to songs", songs_path, class: "link link-hover text-sm opacity-70"
+
+.flex.justify-between.items-start.mb-4
+  h1.text-2xl.font-bold = @song.title
+  .flex.gap-2
+    = link_to "Edit", edit_song_path(@song), class: "btn btn-ghost btn-sm"
+    = button_to "Delete", song_path(@song), method: :delete, class: "btn btn-ghost btn-sm text-error", data: { turbo_confirm: "Are you sure?" }
+
+- if @song.notes.present?
+  .card.bg-base-200.mb-6
+    .card-body.p-4
+      p.whitespace-pre-wrap = @song.notes
+
+.text-xs.opacity-50
+  | Added by #{@song.creator.name} · Updated #{time_ago_in_words(@song.updated_at)} ago

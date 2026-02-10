@@ -1,0 +1,19 @@
+= form_with model: song, class: "space-y-4 max-w-lg" do |f|
+  - if song.errors.any?
+    .alert.alert-error
+      ul
+        - song.errors.full_messages.each do |message|
+          li = message
+
+  .form-control
+    = f.label :title, class: "label"
+      span.label-text Title
+    = f.text_field :title, class: "input input-bordered w-full", autofocus: true
+
+  .form-control
+    = f.label :notes, class: "label"
+      span.label-text Notes
+    = f.text_area :notes, class: "textarea textarea-bordered w-full", rows: 4
+
+  .form-control.mt-6
+    = f.submit class: "btn btn-primary"

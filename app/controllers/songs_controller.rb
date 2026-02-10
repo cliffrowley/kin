@@ -1,0 +1,51 @@
+class SongsController < ApplicationController
+  before_action :set_song, only: %i[show edit update destroy]
+
+  def index
+    @songs = Song.all
+  end
+
+  def show
+  end
+
+  def new
+    @song = Song.new
+  end
+
+  def create
+    @song = Song.new(song_params)
+    @song.creator = current_user
+
+    if @song.save
+      redirect_to @song, notice: "Song was successfully created."
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    if @song.update(song_params)
+      redirect_to @song, notice: "Song was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @song.destroy
+    redirect_to songs_path, notice: "Song was successfully deleted."
+  end
+
+  private
+
+  def set_song
+    @song = Song.find(params[:id])
+  end
+
+  def song_params
+    params.require(:song).permit(:title, :notes)
+  end
+end

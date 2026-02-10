@@ -1,0 +1,6 @@
+.mb-6
+  = link_to "← Back to song", song_path(@song), class: "link link-hover text-sm opacity-70"
+
+h1.text-2xl.font-bold.mb-6 Edit song
+
+= render "form", song: @song
