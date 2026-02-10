@@ -8,6 +8,21 @@ RSpec.describe Song, type: :model do
 
       expect(song.creator).to eq(user)
     end
+
+    it "has many artefacts" do
+      song = create(:song)
+      create(:artefact, song: song, artefact_type: :mix)
+      create(:artefact, song: song, artefact_type: :contribution)
+
+      expect(song.artefacts.count).to eq(2)
+    end
+
+    it "destroys artefacts when destroyed" do
+      song = create(:song)
+      create(:artefact, song: song)
+
+      expect { song.destroy }.to change(Artefact, :count).by(-1)
+    end
   end
 
   describe "validations" do
