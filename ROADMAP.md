@@ -25,9 +25,9 @@ Auth, songs, audio upload & playback.
   - [x] Upload UI on the song show page
   - [x] Inline audio player for playback
 
-- [ ] **Main Mix Designation**
-  - [ ] Song `has_one :main_mix` reference to an artefact
-  - [ ] UI to set/change the main mix on the song page
+- [x] **Main Mix Designation**
+  - [x] Song `has_one :main_mix` reference to an artefact
+  - [x] UI to set/change the main mix on the song page
 
 ---
 
