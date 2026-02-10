@@ -12,6 +12,21 @@
     .card-body.p-4
       p.whitespace-pre-wrap = @song.notes
 
+- if @song.key.present? || @song.tempo.present?
+  .flex.gap-4.mb-6
+    - if @song.key.present?
+      .badge.badge-outline.badge-lg
+        | Key: #{@song.key}
+    - if @song.tempo.present?
+      .badge.badge-outline.badge-lg
+        | #{@song.tempo.to_i == @song.tempo ? @song.tempo.to_i : @song.tempo} BPM
+
+- if @song.lyrics.present?
+  .card.bg-base-200.mb-6
+    .card-body.p-4
+      h3.text-sm.font-semibold.uppercase.tracking-wide.opacity-70.mb-2 Lyrics
+      p.whitespace-pre-wrap.text-sm = @song.lyrics
+
 .text-xs.opacity-50.mb-8
   | Added by #{@song.creator.name} · Updated #{time_ago_in_words(@song.updated_at)} ago
 
