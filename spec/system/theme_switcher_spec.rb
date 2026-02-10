@@ -81,6 +81,62 @@ RSpec.describe "Theme switcher", type: :system do
       expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :hidden)
     end
 
+    it "shows the moon icon when system theme is active and OS prefers dark" do
+      page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: "dark" } ])
+      page.execute_script("localStorage.removeItem('kin-theme')")
+      visit current_path
+
+      expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+    end
+
+    it "shows the sun icon when system theme is active and OS prefers light" do
+      page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: "light" } ])
+      page.execute_script("localStorage.removeItem('kin-theme')")
+      visit current_path
+
+      expect(page).to have_css("[data-theme-target='iconLight']:not(.hidden)")
+      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :hidden)
+    end
+
+    it "updates the icon in real time when the OS theme changes while system theme is active" do
+      # Ensure system theme is active
+      page.execute_script("localStorage.removeItem('kin-theme')")
+
+      # Start with OS preferring light
+      page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: "light" } ])
+      visit current_path
+
+      expect(page).to have_css("[data-theme-target='iconLight']:not(.hidden)")
+      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :hidden)
+
+      # Simulate OS switching to dark — the listener should update the icon automatically
+      page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: "dark" } ])
+
+      expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+    end
+
+    it "does not update the icon when OS theme changes if an explicit theme is selected" do
+      # Set OS to light, then explicitly choose dark theme
+      page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: "light" } ])
+      page.execute_script("localStorage.removeItem('kin-theme')")
+      visit current_path
+
+      find("[data-controller='theme'] [role='button']").click
+      find("input[aria-label='Dark']").click
+
+      expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
+
+      # OS switches to light — icon should stay on moon because explicit dark is selected
+      page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: "light" } ])
+
+      # Give a moment for any (incorrect) listener to fire
+      sleep 0.3
+      expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+    end
+
     it "persists the selected theme across page navigations" do
       find("[data-controller='theme'] [role='button']").click
       find("input[aria-label='Light']").click
