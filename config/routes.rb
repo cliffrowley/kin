@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "dashboard#show"
 
+  resources :users, except: :show
+
   resources :songs do
     resources :artefacts, only: %i[new create edit update destroy] do
       resources :comments, only: %i[create], module: :artefacts
