@@ -1,0 +1,32 @@
+= turbo_frame_tag dom_id(@artefact) do
+  .card.bg-base-200.mt-3
+    .card-body.p-4
+      h3.text-sm.font-semibold.mb-3 Edit Artefact
+
+      = form_with model: @artefact, url: song_artefact_path(@song, @artefact), method: :patch, class: "space-y-3" do |f|
+        - if @artefact.errors.any?
+          .alert.alert-error.mb-2
+            ul
+              - @artefact.errors.full_messages.each do |msg|
+                li = msg
+
+        .form-control
+          label.label
+            span.label-text Title
+          = f.text_field :title, class: "input input-bordered input-sm w-full"
+
+        .form-control
+          label.label
+            span.label-text Audio file
+          - if @artefact.audio.attached?
+            p.text-xs.opacity-50.mb-1 Current: #{@artefact.audio.filename}
+          = f.file_field :audio, accept: "audio/*", class: "file-input file-input-bordered file-input-sm w-full"
+
+        .form-control
+          label.label
+            span.label-text Notes (optional)
+          = f.text_area :notes, class: "textarea textarea-bordered textarea-sm w-full", rows: 2
+
+        .flex.gap-2
+          = f.submit "Save", class: "btn btn-primary btn-sm"
+          = link_to "Cancel", song_path(@song), class: "btn btn-ghost btn-sm", data: { turbo_frame: dom_id(@artefact) }

@@ -120,6 +120,65 @@ RSpec.describe "Artefacts", type: :request do
     end
   end
 
+  describe "GET /songs/:song_id/artefacts/:id/edit" do
+    it "returns a turbo frame with the edit form" do
+      artefact = create(:artefact, artefactable: song)
+      get edit_song_artefact_path(song, artefact)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("turbo-frame")
+      expect(response.body).to include(artefact.title)
+    end
+
+    it "works with a deeply nested artefact" do
+      level1 = create(:artefact, artefactable: song)
+      level2 = create(:artefact, artefactable: level1)
+      get edit_song_artefact_path(song, level2)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "PATCH /songs/:song_id/artefacts/:id" do
+    let(:artefact) { create(:artefact, artefactable: song, title: "Original") }
+
+    context "with valid params" do
+      it "updates the artefact" do
+        patch song_artefact_path(song, artefact), params: { artefact: { title: "Updated" } }
+        expect(artefact.reload.title).to eq("Updated")
+      end
+
+      it "redirects to the song page for HTML requests" do
+        patch song_artefact_path(song, artefact), params: { artefact: { title: "Updated" } }
+        expect(response).to redirect_to(song_path(song))
+      end
+
+      it "responds with turbo_stream when requested" do
+        patch song_artefact_path(song, artefact), params: {
+          artefact: { title: "Updated" }
+        }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+        expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      end
+
+      it "updates a deeply nested artefact" do
+        level1 = create(:artefact, artefactable: song)
+        level2 = create(:artefact, artefactable: level1, title: "Deep")
+        patch song_artefact_path(song, level2), params: { artefact: { title: "Deep Updated" } }
+        expect(level2.reload.title).to eq("Deep Updated")
+      end
+    end
+
+    context "with invalid params" do
+      it "does not update the artefact" do
+        patch song_artefact_path(song, artefact), params: { artefact: { title: "" } }
+        expect(artefact.reload.title).to eq("Original")
+      end
+
+      it "responds with unprocessable_entity" do
+        patch song_artefact_path(song, artefact), params: { artefact: { title: "" } }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
   describe "DELETE /songs/:song_id/artefacts/:id" do
     it "destroys the artefact" do
       artefact = create(:artefact, artefactable: song)

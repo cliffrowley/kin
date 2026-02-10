@@ -1,4 +1,4 @@
-div id=dom_id(artefact)
+= turbo_frame_tag dom_id(artefact) do
   .card.bg-base-200 class=("ring-1 ring-primary" if artefact == artefact.song.main_artefact)
     .card-body.p-4
       .flex.justify-between.items-start
@@ -12,6 +12,7 @@ div id=dom_id(artefact)
         .flex.gap-1.flex-shrink-0
           - if artefact.parent.nil? && artefact != artefact.song.main_artefact
             = button_to "Set as main artefact", song_main_artefact_path(artefact.song), params: { artefact_id: artefact.id }, method: :patch, class: "btn btn-ghost btn-xs"
+          = link_to "Edit", edit_song_artefact_path(artefact.song, artefact), class: "btn btn-ghost btn-xs"
           = button_to "Delete", song_artefact_path(artefact.song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
       - if artefact.audio.attached?
         .mt-3

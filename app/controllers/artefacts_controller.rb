@@ -6,6 +6,23 @@ class ArtefactsController < ApplicationController
     @artefact = (@parent || @song).artefacts.build
   end
 
+  def edit
+    @artefact = find_song_artefact(params[:id])
+  end
+
+  def update
+    @artefact = find_song_artefact(params[:id])
+
+    if @artefact.update(artefact_params)
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @song, notice: "Artefact was successfully updated." }
+      end
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def create
     @parent = find_song_artefact(params[:artefact][:parent_id]) if params[:artefact][:parent_id].present?
     @artefactable = @parent || @song
