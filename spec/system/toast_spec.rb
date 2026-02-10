@@ -36,6 +36,9 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       visit login_path
       click_button "Sign in with Google"
 
+      # Wait for the sign-in toast to be fully removed from the DOM
+      expect(page).not_to have_css(".toast", wait: 5)
+
       # Sign out to trigger a toast
       click_button "Sign out"
 
