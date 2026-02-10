@@ -7,7 +7,10 @@ class Artefacts::CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      redirect_to @song, notice: "Comment added."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @song, notice: "Comment added." }
+      end
     else
       redirect_to @song, alert: "Comment can't be blank."
     end

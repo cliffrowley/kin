@@ -80,6 +80,37 @@ h2.text-xl.font-semibold.mb-4 Artefacts
                             .mt-2
                               audio controls="" preload="metadata" class="w-full"
                                 source src=url_for(child.audio) type=child.audio.content_type
+              /! Artefact comments
+              - if artefact.comments.any? || true
+                details.mt-3
+                  summary.cursor-pointer.text-sm.opacity-70.select-none
+                    - count = artefact.comments.size
+                    - if count > 0
+                      | #{count} #{"comment".pluralize(count)}
+                    - else
+                      | Comments
+                  .mt-2
+                    div id=dom_id(artefact, :comments)
+                      - artefact.comments.each do |comment|
+                        div id=dom_id(comment)
+                          .chat class=("chat-end" if comment.user == current_user) class=("chat-start" unless comment.user == current_user)
+                            = render "comments/comment", comment: comment
+                    .mt-2 id=dom_id(artefact, :comment_form)
+                      = render "comments/form", url: song_artefact_comments_path(@song, artefact), placeholder: "Comment on this artefact..."
+
+/! Song comments
+.divider
+
+h2.text-xl.font-semibold.mb-4 Discussion
+
+div id=dom_id(@song, :comments)
+  - @song.comments.each do |comment|
+    div id=dom_id(comment)
+      .chat class=("chat-end" if comment.user == current_user) class=("chat-start" unless comment.user == current_user)
+        = render "comments/comment", comment: comment
+
+.mt-4 id=dom_id(@song, :comment_form)
+  = render "comments/form", url: song_comments_path(@song), placeholder: "Comment on this song..."
 
 /! Upload form
 .divider

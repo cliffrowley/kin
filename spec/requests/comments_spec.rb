@@ -29,6 +29,11 @@ RSpec.describe "Comments", type: :request do
         post song_comments_path(song), params: { comment: { body: "Great song!" } }
         expect(response).to redirect_to(song_path(song))
       end
+
+      it "responds with turbo_stream when requested" do
+        post song_comments_path(song), params: { comment: { body: "Great song!" } }, as: :turbo_stream
+        expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      end
     end
 
     context "with invalid params" do

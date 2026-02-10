@@ -6,7 +6,10 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      redirect_to @song, notice: "Comment added."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @song, notice: "Comment added." }
+      end
     else
       redirect_to @song, alert: "Comment can't be blank."
     end
@@ -17,7 +20,10 @@ class CommentsController < ApplicationController
 
     if @comment.user == current_user
       @comment.destroy
-      redirect_to @song, notice: "Comment deleted."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @song, notice: "Comment deleted." }
+      end
     else
       redirect_to @song, alert: "You can only delete your own comments."
     end
