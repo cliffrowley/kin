@@ -7,6 +7,7 @@ class ArtefactsController < ApplicationController
     if @artefact.save
       redirect_to @song, notice: "Artefact was successfully uploaded."
     else
+      @parent_artefacts = @song.artefacts.top_level
       render "songs/show", status: :unprocessable_entity
     end
   end
@@ -24,6 +25,6 @@ class ArtefactsController < ApplicationController
   end
 
   def artefact_params
-    params.require(:artefact).permit(:title, :artefact_type, :notes, :audio)
+    params.require(:artefact).permit(:title, :artefact_type, :notes, :audio, :parent_id)
   end
 end

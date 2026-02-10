@@ -51,6 +51,22 @@ RSpec.describe "Artefacts", type: :request do
         }
         expect(Artefact.last).to be_contribution
       end
+
+      it "creates an artefact with a parent" do
+        parent = create(:artefact, song: song, artefact_type: :mix)
+        post song_artefacts_path(song), params: {
+          artefact: { title: "Guitar Part", artefact_type: "contribution", parent_id: parent.id }
+        }
+        child = Artefact.find_by(title: "Guitar Part")
+        expect(child.parent).to eq(parent)
+      end
+
+      it "creates an artefact without a parent" do
+        post song_artefacts_path(song), params: {
+          artefact: { title: "Standalone Mix", artefact_type: "mix" }
+        }
+        expect(Artefact.last.parent_id).to be_nil
+      end
     end
 
     context "with invalid params" do

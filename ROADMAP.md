@@ -35,9 +35,9 @@ Auth, songs, audio upload & playback.
 
 Artefact hierarchy, comments, and song metadata.
 
-- [ ] **Artefact Attachments (parent/child)**
-  - [ ] Self-referential `parent_id` on Artefact
-  - [ ] Song show page shows top-level mixes by default, reveals attached artefacts on expand
+- [x] **Artefact Attachments (parent/child)**
+  - [x] Self-referential `parent_id` on Artefact
+  - [x] Song show page shows top-level mixes by default, reveals attached artefacts on expand
 
 - [ ] **Feedback (Comments)**
   - [ ] `Comment` model (belongs_to :artefact, belongs_to :user, body)
