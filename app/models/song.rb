@@ -5,6 +5,7 @@ class Song < ApplicationRecord
   belongs_to :main_mix, class_name: "Artefact", optional: true
 
   validates :title, presence: true
+  validates :tempo, numericality: { greater_than: 0 }, allow_nil: true
   validate :main_mix_belongs_to_song
   validate :main_mix_is_a_mix
 
