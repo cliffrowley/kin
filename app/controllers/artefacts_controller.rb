@@ -1,26 +1,34 @@
 class ArtefactsController < ApplicationController
   before_action :set_song
 
+  def new
+    @parent = @song.artefacts.find(params[:parent_id]) if params[:parent_id].present?
+    @artefact = (@parent || @song).artefacts.build
+  end
+
   def create
-    @artefact = if params[:artefact][:parent_id].present?
-      parent = @song.artefacts.find(params[:artefact][:parent_id])
-      parent.artefacts.build(artefact_params_without_parent)
-    else
-      @song.artefacts.build(artefact_params_without_parent)
-    end
+    @parent = @song.artefacts.find(params[:artefact][:parent_id]) if params[:artefact][:parent_id].present?
+    @artefactable = @parent || @song
+    @artefact = @artefactable.artefacts.build(artefact_params)
 
     if @artefact.save
-      redirect_to @song, notice: "Artefact was successfully uploaded."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @song, notice: "Artefact was successfully uploaded." }
+      end
     else
-      @parent_artefacts = @song.artefacts.top_level
-      render "songs/show", status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @artefact = @song.artefacts.find(params[:id])
+    @artefact = @song.all_artefacts.find(params[:id])
     @artefact.destroy
-    redirect_to @song, notice: "Artefact was successfully deleted."
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to @song, notice: "Artefact was successfully deleted." }
+    end
   end
 
   private
@@ -29,7 +37,7 @@ class ArtefactsController < ApplicationController
     @song = Song.find(params[:song_id])
   end
 
-  def artefact_params_without_parent
+  def artefact_params
     params.require(:artefact).permit(:title, :notes, :audio)
   end
 end

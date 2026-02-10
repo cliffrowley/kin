@@ -6,6 +6,22 @@ RSpec.describe "Artefacts", type: :request do
 
   before { sign_in(user) }
 
+  describe "GET /songs/:song_id/artefacts/new" do
+    it "returns a turbo frame with the artefact form" do
+      get new_song_artefact_path(song), headers: { "Turbo-Frame" => "new_artefact_for_song_#{song.id}" }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("turbo-frame")
+    end
+
+    it "accepts an optional parent_id for child artefacts" do
+      parent = create(:artefact, artefactable: song)
+      get new_song_artefact_path(song, parent_id: parent.id), headers: { "Turbo-Frame" => "new_artefact_for_artefact_#{parent.id}" }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("parent_id")
+      expect(response.body).to include(parent.id.to_s)
+    end
+  end
+
   describe "POST /songs/:song_id/artefacts" do
     let(:audio_file) do
       fixture_file_upload(
@@ -30,11 +46,18 @@ RSpec.describe "Artefacts", type: :request do
         expect(Artefact.last.audio).to be_attached
       end
 
-      it "redirects to the song page" do
+      it "redirects to the song page for HTML requests" do
         post song_artefacts_path(song), params: {
           artefact: { title: "First Mix", audio: audio_file }
         }
         expect(response).to redirect_to(song_path(song))
+      end
+
+      it "responds with turbo_stream when requested" do
+        post song_artefacts_path(song), params: {
+          artefact: { title: "First Mix" }
+        }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+        expect(response.media_type).to eq("text/vnd.turbo-stream.html")
       end
 
       it "creates artefact without audio file" do
@@ -71,7 +94,7 @@ RSpec.describe "Artefacts", type: :request do
         }.not_to change(Artefact, :count)
       end
 
-      it "re-renders the song page" do
+      it "responds with unprocessable_entity" do
         post song_artefacts_path(song), params: {
           artefact: { title: "" }
         }
@@ -88,10 +111,16 @@ RSpec.describe "Artefacts", type: :request do
       }.to change(Artefact, :count).by(-1)
     end
 
-    it "redirects to the song page" do
+    it "redirects to the song page for HTML requests" do
       artefact = create(:artefact, artefactable: song)
       delete song_artefact_path(song, artefact)
       expect(response).to redirect_to(song_path(song))
+    end
+
+    it "responds with turbo_stream when requested" do
+      artefact = create(:artefact, artefactable: song)
+      delete song_artefact_path(song, artefact), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
     end
   end
 
