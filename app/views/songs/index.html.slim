@@ -4,18 +4,7 @@
 
 - if @songs.any?
   .grid.gap-4
-    - @songs.each do |song|
-      .card.bg-base-200.shadow-sm
-        .card-body.p-4
-          .flex.justify-between.items-start
-            div
-              h2.card-title.text-lg
-                = link_to song.title, song, class: "link link-hover"
-              - if song.notes.present?
-                p.text-sm.opacity-70.mt-1 = truncate(song.notes, length: 120)
-            .text-xs.opacity-50
-              = time_ago_in_words(song.updated_at)
-              |  ago
+    = render @songs
 - else
   .text-center.py-12.opacity-60
     p No songs yet.
