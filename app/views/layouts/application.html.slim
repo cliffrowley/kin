@@ -56,12 +56,12 @@ html
           = button_to "Sign out", logout_path, method: :delete, class: "btn btn-ghost btn-sm"
 
     - if flash[:notice]
-      .toast.toast-top.toast-end data-controller="toast"
+      .toast.toast-top.toast-end data-controller="toast" data-toast-dismiss-delay-value=toast_dismiss_delay data-toast-fade-out-duration-value=toast_fade_out_duration
         .alert.alert-success
           span = flash[:notice]
 
     - if flash[:alert]
-      .toast.toast-top.toast-end data-controller="toast"
+      .toast.toast-top.toast-end data-controller="toast" data-toast-dismiss-delay-value=toast_dismiss_delay data-toast-fade-out-duration-value=toast_fade_out_duration
         .alert.alert-warning
           span = flash[:alert]
 
