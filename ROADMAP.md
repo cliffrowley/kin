@@ -15,9 +15,9 @@ Auth, songs, audio upload & playback.
   - [x] Authentication concern for controllers
   - [x] Basic Tailwind/DaisyUI layout shell (navbar, content area)
 
-- [ ] **Songs**
-  - [ ] `Song` model (title, notes, timestamps)
-  - [ ] Songs CRUD controller & views (index, show, new/edit)
+- [x] **Songs**
+  - [x] `Song` model (title, notes, timestamps)
+  - [x] Songs CRUD controller & views (index, show, new/edit)
 
 - [ ] **Artefacts & Audio Upload**
   - [ ] `Artefact` model (belongs_to :song, type enum: mix/contribution/master, title, notes)
