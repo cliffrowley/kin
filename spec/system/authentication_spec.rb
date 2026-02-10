@@ -11,6 +11,8 @@ RSpec.describe "Authentication", type: :system do
   end
 
   describe "signing in" do
+    let!(:user) { create(:user, email: "musician@example.com", name: "A Musician") }
+
     before do
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
         provider: "google_oauth2",
@@ -28,6 +30,27 @@ RSpec.describe "Authentication", type: :system do
 
       expect(page).to have_text("A Musician")
       expect(page).to have_button("Sign out")
+    end
+  end
+
+  describe "signing in when not authorised" do
+    before do
+      OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+        provider: "google_oauth2",
+        uid: "123456",
+        info: {
+          email: "unknown@example.com",
+          name: "Unknown Person"
+        }
+      )
+    end
+
+    it "rejects sign-in and shows an error" do
+      visit login_path
+      click_button "Sign in with Google"
+
+      expect(page).to have_button("Sign in with Google")
+      expect(page).to have_text("not authorised")
     end
   end
 

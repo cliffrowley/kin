@@ -25,18 +25,40 @@ RSpec.describe "Sessions", type: :request do
       OmniAuth.config.mock_auth[:google_oauth2] = auth_hash
     end
 
-    it "creates a user from the OAuth data" do
-      expect { post "/auth/google_oauth2/callback" }.to change(User, :count).by(1)
+    context "when a user with the email exists" do
+      let!(:user) { create(:user, email: "musician@example.com", name: "Old Name", provider: nil, uid: nil) }
+
+      it "does not create a new user" do
+        expect { post "/auth/google_oauth2/callback" }.not_to change(User, :count)
+      end
+
+      it "sets the user_id in the session" do
+        post "/auth/google_oauth2/callback"
+        expect(session[:user_id]).to eq(user.id)
+      end
+
+      it "redirects to the root path" do
+        post "/auth/google_oauth2/callback"
+        expect(response).to redirect_to(root_path)
+      end
     end
 
-    it "sets the user_id in the session" do
-      post "/auth/google_oauth2/callback"
-      expect(session[:user_id]).to eq(User.last.id)
-    end
+    context "when no user with the email exists" do
+      it "does not create a user" do
+        expect { post "/auth/google_oauth2/callback" }.not_to change(User, :count)
+      end
 
-    it "redirects to the root path" do
-      post "/auth/google_oauth2/callback"
-      expect(response).to redirect_to(root_path)
+      it "does not set user_id in the session" do
+        post "/auth/google_oauth2/callback"
+        expect(session[:user_id]).to be_nil
+      end
+
+      it "redirects to the login page with an alert" do
+        post "/auth/google_oauth2/callback"
+        expect(response).to redirect_to(login_path)
+        follow_redirect!
+        expect(response.body).to include("not authorised")
+      end
     end
   end
 

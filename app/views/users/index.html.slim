@@ -1,0 +1,26 @@
+.flex.justify-between.items-center.mb-6
+  h1.text-2xl.font-bold Users
+  = link_to "Add user", new_user_path, class: "btn btn-primary btn-sm"
+
+- if @users.any?
+  .overflow-x-auto
+    table.table.table-zebra
+      thead
+        tr
+          th Name
+          th Email
+          th
+      tbody
+        - @users.each do |user|
+          tr
+            td = user.name
+            td = user.email
+            td.text-right
+              .flex.gap-2.justify-end
+                = link_to "Edit", edit_user_path(user), class: "btn btn-ghost btn-xs"
+                = button_to "Remove", user_path(user), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Remove #{user.name}?" }
+- else
+  .text-center.py-12.opacity-60
+    p No users yet.
+    p.mt-2
+      = link_to "Add one", new_user_path, class: "link link-primary"

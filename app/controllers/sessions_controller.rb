@@ -6,8 +6,13 @@ class SessionsController < ApplicationController
 
   def create
     user = User.from_omniauth(request.env["omniauth.auth"])
-    session[:user_id] = user.id
-    redirect_to root_path, notice: "Signed in successfully."
+
+    if user
+      session[:user_id] = user.id
+      redirect_to root_path, notice: "Signed in successfully."
+    else
+      redirect_to login_path, alert: "You are not authorised to access this application."
+    end
   end
 
   def destroy

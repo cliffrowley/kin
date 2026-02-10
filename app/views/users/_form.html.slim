@@ -1,0 +1,23 @@
+.max-w-md.mx-auto
+  h1.text-2xl.font-bold.mb-6 = title
+
+  = form_with model: user, class: "space-y-4" do |f|
+    - if user.errors.any?
+      .alert.alert-warning.mb-4
+        ul
+          - user.errors.full_messages.each do |message|
+            li = message
+
+    .form-control
+      = f.label :name, class: "label"
+        span.label-text Name
+      = f.text_field :name, class: "input input-bordered w-full", autofocus: true
+
+    .form-control
+      = f.label :email, class: "label"
+        span.label-text Email
+      = f.email_field :email, class: "input input-bordered w-full"
+
+    .flex.gap-2.justify-end.mt-6
+      = link_to "Cancel", users_path, class: "btn btn-ghost"
+      = f.submit "Save", class: "btn btn-primary"
