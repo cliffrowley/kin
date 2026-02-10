@@ -2,74 +2,17 @@
   = link_to "← Back to songs", songs_path, class: "link link-hover text-sm opacity-70"
 
 .flex.justify-between.items-start.mb-4
-  h1.text-2xl.font-bold = @song.title
+  div
+    h1.text-2xl.font-bold = @song.title
+    .text-xs.opacity-50.mt-1
+      | Added by #{@song.creator.name} · Updated #{time_ago_in_words(@song.updated_at)} ago
   .flex.gap-2
     = link_to "Edit", edit_song_path(@song), class: "btn btn-ghost btn-sm"
     = button_to "Delete", song_path(@song), method: :delete, class: "btn btn-ghost btn-sm text-error", data: { turbo_confirm: "Are you sure?" }
 
-- if @song.notes.present?
-  .card.bg-base-200.mb-6
-    .card-body.p-4
-      p.whitespace-pre-wrap = @song.notes
-
-- if @song.key.present? || @song.tempo.present?
-  .flex.gap-4.mb-6
-    - if @song.key.present?
-      .badge.badge-outline.badge-lg
-        | Key: #{@song.key}
-    - if @song.tempo.present?
-      .badge.badge-outline.badge-lg
-        | #{@song.tempo.to_i == @song.tempo ? @song.tempo.to_i : @song.tempo} BPM
-
-- if @song.lyrics.present?
-  .card.bg-base-200.mb-6
-    .card-body.p-4
-      h3.text-sm.font-semibold.uppercase.tracking-wide.opacity-70.mb-2 Lyrics
-      p.whitespace-pre-wrap.text-sm = @song.lyrics
-
-.text-xs.opacity-50.mb-8
-  | Added by #{@song.creator.name} · Updated #{time_ago_in_words(@song.updated_at)} ago
-
-/! Main Artefact section
-- if @song.main_artefact.present?
-  .card.bg-primary.bg-opacity-10.border.border-primary.mb-6
-    .card-body.p-4
-      .flex.justify-between.items-center.mb-2
-        .flex.items-center.gap-2
-          span.badge.badge-primary Main Artefact
-          span.font-semibold = @song.main_artefact.title
-        = button_to "Clear", song_main_artefact_path(@song), method: :delete, class: "btn btn-ghost btn-xs", data: { turbo_confirm: "Clear the main artefact?" }
-      - if @song.main_artefact.audio.attached?
-        button.btn.btn-primary.btn-sm.gap-2 data-controller="play-button" data-action="click->play-button#play" data-play-button-url-value=url_for(@song.main_artefact.audio) data-play-button-title-value="#{@song.title} — #{@song.main_artefact.title}"
-          svg.w-4.h-4.fill-current xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-            path d="M8 5v14l11-7z"
-          | Play
-
-/! Artefacts section
-.divider
-
-h2.text-xl.font-semibold.mb-4 Artefacts
-
-- artefacts = @song.artefacts.top_level
-
-.flex.flex-col.gap-4 id=dom_id(@song, :artefacts)
-  - if artefacts.any?
-    = render artefacts
-
-.mt-4
-  = turbo_frame_tag dom_id(@song, :new_artefact) do
-    = link_to "Add artefact", new_song_artefact_path(@song), class: "btn btn-ghost btn-sm", data: { turbo_frame: dom_id(@song, :new_artefact) }
-
-/! Song comments
-.divider
-
-h2.text-xl.font-semibold.mb-4 Discussion
-
-div id=dom_id(@song, :comments)
-  - @song.comments.each do |comment|
-    div id=dom_id(comment)
-      .chat class=("chat-end" if comment.user == current_user) class=("chat-start" unless comment.user == current_user)
-        = render "comments/comment", comment: comment
-
-.mt-4 id=dom_id(@song, :comment_form)
-  = render "comments/form", url: song_comments_path(@song), placeholder: "Comment on this song..."
+= render "songs/notes", song: @song
+= render "songs/metadata", song: @song
+= render "songs/lyrics", song: @song
+= render "songs/main_artefact", song: @song
+= render "songs/artefacts", song: @song
+= render "songs/discussion", song: @song

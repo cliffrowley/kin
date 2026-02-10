@@ -1,0 +1,8 @@
+- if song.key.present? || song.tempo.present?
+  .flex.gap-4.mb-6
+    - if song.key.present?
+      .badge.badge-outline.badge-lg
+        | Key: #{song.key}
+    - if song.tempo.present?
+      .badge.badge-outline.badge-lg
+        | #{song.tempo.to_i == song.tempo ? song.tempo.to_i : song.tempo} BPM
