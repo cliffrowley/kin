@@ -65,6 +65,22 @@ RSpec.describe "Theme switcher", type: :system do
       expect(html["data-theme"]).to be_nil
     end
 
+    it "shows the moon icon when the effective theme is dark" do
+      find("[data-controller='theme'] [role='button']").click
+      find("input[aria-label='Dark']").click
+
+      expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+    end
+
+    it "shows the sun icon when the effective theme is light" do
+      find("[data-controller='theme'] [role='button']").click
+      find("input[aria-label='Light']").click
+
+      expect(page).to have_css("[data-theme-target='iconLight']:not(.hidden)")
+      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :hidden)
+    end
+
     it "persists the selected theme across page navigations" do
       find("[data-controller='theme'] [role='button']").click
       find("input[aria-label='Light']").click
