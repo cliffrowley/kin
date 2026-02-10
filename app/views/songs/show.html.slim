@@ -12,5 +12,64 @@
     .card-body.p-4
       p.whitespace-pre-wrap = @song.notes
 
-.text-xs.opacity-50
+.text-xs.opacity-50.mb-8
   | Added by #{@song.creator.name} · Updated #{time_ago_in_words(@song.updated_at)} ago
+
+/! Artefacts section
+.divider
+
+h2.text-xl.font-semibold.mb-4 Artefacts
+
+- %w[mix contribution master].each do |type|
+  - artefacts = @song.artefacts.where(artefact_type: Artefact.artefact_types[type])
+  - if artefacts.any?
+    .mb-6
+      h3.text-sm.font-semibold.uppercase.tracking-wide.opacity-70.mb-2 = type.pluralize.titleize
+      .space-y-3
+        - artefacts.each do |artefact|
+          .card.bg-base-200
+            .card-body.p-4
+              .flex.justify-between.items-start
+                div
+                  .font-medium = artefact.title
+                  - if artefact.notes.present?
+                    p.text-sm.opacity-70.mt-1 = artefact.notes
+                .flex-shrink-0
+                  = button_to "Delete", song_artefact_path(@song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
+              - if artefact.audio.attached?
+                .mt-3
+                  audio controls="" preload="metadata" class="w-full"
+                    source src=url_for(artefact.audio) type=artefact.audio.content_type
+
+/! Upload form
+.divider
+h3.text-lg.font-semibold.mb-4 Upload Artefact
+
+= form_with model: @artefact, url: song_artefacts_path(@song), class: "space-y-4" do |f|
+  - if @artefact.errors.any?
+    .alert.alert-error.mb-4
+      ul
+        - @artefact.errors.full_messages.each do |msg|
+          li = msg
+
+  .form-control
+    label.label
+      span.label-text Title
+    = f.text_field :title, class: "input input-bordered w-full", placeholder: "e.g. Rough mix v2"
+
+  .form-control
+    label.label
+      span.label-text Type
+    = f.select :artefact_type, Artefact.artefact_types.keys.map { |t| [t.titleize, t] }, {}, class: "select select-bordered w-full"
+
+  .form-control
+    label.label
+      span.label-text Audio file
+    = f.file_field :audio, accept: "audio/*", class: "file-input file-input-bordered w-full"
+
+  .form-control
+    label.label
+      span.label-text Notes (optional)
+    = f.text_area :notes, class: "textarea textarea-bordered w-full", rows: 2, placeholder: "Any notes about this artefact..."
+
+  = f.submit "Upload", class: "btn btn-primary"
