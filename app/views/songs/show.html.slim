@@ -34,7 +34,7 @@
 h2.text-xl.font-semibold.mb-4 Artefacts
 
 - %w[mix contribution master].each do |type|
-  - artefacts = @song.artefacts.where(artefact_type: Artefact.artefact_types[type])
+  - artefacts = @song.artefacts.top_level.where(artefact_type: Artefact.artefact_types[type])
   - if artefacts.any?
     .mb-6
       h3.text-sm.font-semibold.uppercase.tracking-wide.opacity-70.mb-2 = type.pluralize.titleize
@@ -58,6 +58,28 @@ h2.text-xl.font-semibold.mb-4 Artefacts
                 .mt-3
                   audio controls="" preload="metadata" class="w-full"
                     source src=url_for(artefact.audio) type=artefact.audio.content_type
+              /! Child artefacts
+              - if artefact.children.any?
+                details.mt-3
+                  summary.cursor-pointer.text-sm.opacity-70.select-none
+                    | #{artefact.children.size} attached #{"artefact".pluralize(artefact.children.size)}
+                  .ml-4.mt-2.space-y-2
+                    - artefact.children.each do |child|
+                      .card.bg-base-300
+                        .card-body.p-3
+                          .flex.justify-between.items-start
+                            div
+                              .flex.items-center.gap-2
+                                .font-medium.text-sm = child.title
+                                span.badge.badge-ghost.badge-xs = child.artefact_type.titleize
+                              - if child.notes.present?
+                                p.text-xs.opacity-70.mt-1 = child.notes
+                            .flex.gap-1.flex-shrink-0
+                              = button_to "Delete", song_artefact_path(@song, child), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
+                          - if child.audio.attached?
+                            .mt-2
+                              audio controls="" preload="metadata" class="w-full"
+                                source src=url_for(child.audio) type=child.audio.content_type
 
 /! Upload form
 .divider
@@ -79,6 +101,11 @@ h3.text-lg.font-semibold.mb-4 Upload Artefact
     label.label
       span.label-text Type
     = f.select :artefact_type, Artefact.artefact_types.keys.map { |t| [t.titleize, t] }, {}, class: "select select-bordered w-full"
+
+  .form-control
+    label.label
+      span.label-text Attach to (optional)
+    = f.select :parent_id, @parent_artefacts.map { |a| ["#{a.title} (#{a.artefact_type.titleize})", a.id] }, { include_blank: "None (top-level)" }, class: "select select-bordered w-full"
 
   .form-control
     label.label

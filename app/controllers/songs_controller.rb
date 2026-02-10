@@ -7,6 +7,7 @@ class SongsController < ApplicationController
 
   def show
     @artefact = @song.artefacts.build
+    @parent_artefacts = @song.artefacts.top_level
   end
 
   def new
