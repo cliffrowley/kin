@@ -2,9 +2,11 @@ require "rails_helper"
 
 RSpec.describe Artefact, type: :model do
   describe "associations" do
-    it "belongs to a song" do
-      artefact = create(:artefact)
-      expect(artefact.song).to be_a(Song)
+    it "belongs to a song via artefactable" do
+      song = create(:song)
+      artefact = create(:artefact, artefactable: song)
+      expect(artefact.artefactable).to eq(song)
+      expect(artefact.song).to eq(song)
     end
 
     it "has one attached audio" do
@@ -12,32 +14,35 @@ RSpec.describe Artefact, type: :model do
       expect(artefact).to respond_to(:audio)
     end
 
-    it "optionally belongs to a parent artefact" do
+    it "can belong to a parent artefact" do
       song = create(:song)
-      parent = create(:artefact, song: song)
-      child = create(:artefact, song: song, parent: parent)
+      parent = create(:artefact, artefactable: song)
+      child = create(:artefact, artefactable: parent)
+      expect(child.artefactable).to eq(parent)
       expect(child.parent).to eq(parent)
     end
 
-    it "has many children artefacts" do
+    it "has many child artefacts" do
       song = create(:song)
-      parent = create(:artefact, song: song)
-      child1 = create(:artefact, song: song, parent: parent)
-      child2 = create(:artefact, song: song, parent: parent)
+      parent = create(:artefact, artefactable: song)
+      child1 = create(:artefact, artefactable: parent)
+      child2 = create(:artefact, artefactable: parent)
+      expect(parent.artefacts).to contain_exactly(child1, child2)
       expect(parent.children).to contain_exactly(child1, child2)
     end
 
-    it "nullifies children when parent is destroyed" do
+    it "destroys children when parent is destroyed" do
       song = create(:song)
-      parent = create(:artefact, song: song)
-      child = create(:artefact, song: song, parent: parent)
-      parent.destroy
-      expect(child.reload.parent_id).to be_nil
+      parent = create(:artefact, artefactable: song)
+      _child = create(:artefact, artefactable: parent)
+      expect { parent.destroy }.to change(Artefact, :count).by(-2)
     end
 
-    it "is valid without a parent" do
-      artefact = build(:artefact, parent: nil)
-      expect(artefact).to be_valid
+    it "walks up the chain to find the song" do
+      song = create(:song)
+      parent = create(:artefact, artefactable: song)
+      child = create(:artefact, artefactable: parent)
+      expect(child.song).to eq(song)
     end
   end
 
@@ -53,42 +58,26 @@ RSpec.describe Artefact, type: :model do
       expect(artefact.errors[:title]).to include("can't be blank")
     end
 
-    it "requires a song" do
-      artefact = build(:artefact, song: nil)
+    it "requires an artefactable" do
+      artefact = build(:artefact, artefactable: nil)
       expect(artefact).not_to be_valid
-    end
-
-    it "is invalid if parent belongs to a different song" do
-      song1 = create(:song)
-      song2 = create(:song)
-      parent = create(:artefact, song: song1)
-      child = build(:artefact, song: song2, parent: parent)
-      expect(child).not_to be_valid
-      expect(child.errors[:parent]).to include("must belong to the same song")
-    end
-
-    it "is valid if parent belongs to the same song" do
-      song = create(:song)
-      parent = create(:artefact, song: song)
-      child = build(:artefact, song: song, parent: parent)
-      expect(child).to be_valid
     end
   end
 
   describe "scoping" do
     it "orders by created_at descending by default" do
       song = create(:song)
-      older = create(:artefact, song: song, created_at: 2.days.ago)
-      newer = create(:artefact, song: song, created_at: 1.day.ago)
+      older = create(:artefact, artefactable: song, created_at: 2.days.ago)
+      newer = create(:artefact, artefactable: song, created_at: 1.day.ago)
       expect(song.artefacts).to eq([ newer, older ])
     end
 
-    it "scopes top_level to artefacts without a parent" do
+    it "scopes top_level to artefacts owned by a Song" do
       song = create(:song)
-      parent = create(:artefact, song: song)
-      child = create(:artefact, song: song, parent: parent)
-      expect(song.artefacts.top_level).to include(parent)
-      expect(song.artefacts.top_level).not_to include(child)
+      parent = create(:artefact, artefactable: song)
+      _child = create(:artefact, artefactable: parent)
+      expect(Artefact.top_level).to include(parent)
+      expect(Artefact.top_level).not_to include(_child)
     end
   end
 end

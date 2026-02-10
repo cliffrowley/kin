@@ -23,7 +23,7 @@ class Artefacts::CommentsController < ApplicationController
   end
 
   def set_artefact
-    @artefact = @song.artefacts.find(params[:artefact_id])
+    @artefact = Artefact.find(params[:artefact_id])
   end
 
   def comment_params
