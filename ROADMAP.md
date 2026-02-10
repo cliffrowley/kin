@@ -13,12 +13,11 @@ Auth, songs, audio upload & playback.
   - [x] Google OAuth2 via OmniAuth (`omniauth-google-oauth2`)
   - [x] Session controller handling OAuth callback and logout
   - [x] Authentication concern for controllers
+  - [x] Basic Tailwind/DaisyUI layout shell (navbar, content area)
 
 - [ ] **Songs**
   - [ ] `Song` model (title, notes, timestamps)
   - [ ] Songs CRUD controller & views (index, show, new/edit)
-  - [ ] Basic Tailwind/DaisyUI layout shell (navbar, content area)
-  - [ ] Songs index as the root route
 
 - [ ] **Artefacts & Audio Upload**
   - [ ] `Artefact` model (belongs_to :song, type enum: mix/contribution/master, title, notes)
