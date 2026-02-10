@@ -39,10 +39,10 @@ Artefact hierarchy, comments, and song metadata.
   - [x] Self-referential `parent_id` on Artefact
   - [x] Song show page shows top-level mixes by default, reveals attached artefacts on expand
 
-- [ ] **Feedback (Comments)**
-  - [ ] `Comment` model (belongs_to :artefact, belongs_to :user, body)
-  - [ ] Comment thread UI on artefact detail
-  - [ ] Turbo Streams for live comment updates
+- [x] **Feedback (Comments)**
+  - [x] `Comment` model (polymorphic `commentable`, belongs_to :user, body)
+  - [x] Comment thread UI on song and artefact detail
+  - [x] Turbo Streams for live comment updates
 
 - [ ] **Song Metadata**
   - [ ] Add key, tempo (BPM), and lyrics fields to Song
