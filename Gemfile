@@ -62,6 +62,9 @@ group :development, :test do
   # Testing with RSpec [https://rspec.info/]
   gem "rspec-rails"
 
+  # Ruby LSP RSpec addon [https://github.com/st0012/ruby-lsp-rspec]
+  gem "ruby-lsp-rspec", require: false
+
   # Test factories [https://github.com/thoughtbot/factory_bot_rails]
   gem "factory_bot_rails"
 end
