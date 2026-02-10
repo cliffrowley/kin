@@ -14,23 +14,23 @@ RSpec.describe Artefact, type: :model do
 
     it "optionally belongs to a parent artefact" do
       song = create(:song)
-      parent = create(:artefact, song: song, artefact_type: :mix)
-      child = create(:artefact, song: song, artefact_type: :contribution, parent: parent)
+      parent = create(:artefact, song: song)
+      child = create(:artefact, song: song, parent: parent)
       expect(child.parent).to eq(parent)
     end
 
     it "has many children artefacts" do
       song = create(:song)
-      parent = create(:artefact, song: song, artefact_type: :mix)
-      child1 = create(:artefact, song: song, artefact_type: :contribution, parent: parent)
-      child2 = create(:artefact, song: song, artefact_type: :contribution, parent: parent)
+      parent = create(:artefact, song: song)
+      child1 = create(:artefact, song: song, parent: parent)
+      child2 = create(:artefact, song: song, parent: parent)
       expect(parent.children).to contain_exactly(child1, child2)
     end
 
     it "nullifies children when parent is destroyed" do
       song = create(:song)
-      parent = create(:artefact, song: song, artefact_type: :mix)
-      child = create(:artefact, song: song, artefact_type: :contribution, parent: parent)
+      parent = create(:artefact, song: song)
+      child = create(:artefact, song: song, parent: parent)
       parent.destroy
       expect(child.reload.parent_id).to be_nil
     end
@@ -53,12 +53,6 @@ RSpec.describe Artefact, type: :model do
       expect(artefact.errors[:title]).to include("can't be blank")
     end
 
-    it "requires an artefact_type" do
-      artefact = build(:artefact, artefact_type: nil)
-      expect(artefact).not_to be_valid
-      expect(artefact.errors[:artefact_type]).to include("can't be blank")
-    end
-
     it "requires a song" do
       artefact = build(:artefact, song: nil)
       expect(artefact).not_to be_valid
@@ -67,7 +61,7 @@ RSpec.describe Artefact, type: :model do
     it "is invalid if parent belongs to a different song" do
       song1 = create(:song)
       song2 = create(:song)
-      parent = create(:artefact, song: song1, artefact_type: :mix)
+      parent = create(:artefact, song: song1)
       child = build(:artefact, song: song2, parent: parent)
       expect(child).not_to be_valid
       expect(child.errors[:parent]).to include("must belong to the same song")
@@ -75,30 +69,9 @@ RSpec.describe Artefact, type: :model do
 
     it "is valid if parent belongs to the same song" do
       song = create(:song)
-      parent = create(:artefact, song: song, artefact_type: :mix)
+      parent = create(:artefact, song: song)
       child = build(:artefact, song: song, parent: parent)
       expect(child).to be_valid
-    end
-  end
-
-  describe "enum" do
-    it "defines artefact_type enum with mix, contribution, and master" do
-      expect(Artefact.artefact_types).to eq("mix" => 0, "contribution" => 1, "master" => 2)
-    end
-
-    it "can be a mix" do
-      artefact = build(:artefact, artefact_type: :mix)
-      expect(artefact).to be_mix
-    end
-
-    it "can be a contribution" do
-      artefact = build(:artefact, artefact_type: :contribution)
-      expect(artefact).to be_contribution
-    end
-
-    it "can be a master" do
-      artefact = build(:artefact, artefact_type: :master)
-      expect(artefact).to be_master
     end
   end
 
@@ -112,8 +85,8 @@ RSpec.describe Artefact, type: :model do
 
     it "scopes top_level to artefacts without a parent" do
       song = create(:song)
-      parent = create(:artefact, song: song, artefact_type: :mix)
-      child = create(:artefact, song: song, artefact_type: :contribution, parent: parent)
+      parent = create(:artefact, song: song)
+      child = create(:artefact, song: song, parent: parent)
       expect(song.artefacts.top_level).to include(parent)
       expect(song.artefacts.top_level).not_to include(child)
     end

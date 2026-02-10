@@ -11,8 +11,8 @@ RSpec.describe Song, type: :model do
 
     it "has many artefacts" do
       song = create(:song)
-      create(:artefact, song: song, artefact_type: :mix)
-      create(:artefact, song: song, artefact_type: :contribution)
+      create(:artefact, song: song)
+      create(:artefact, song: song)
 
       expect(song.artefacts.count).to eq(2)
     end
@@ -31,14 +31,14 @@ RSpec.describe Song, type: :model do
 
     it "can have a main mix set" do
       song = create(:song)
-      mix = create(:artefact, song: song, artefact_type: :mix)
+      mix = create(:artefact, song: song)
       song.update!(main_mix: mix)
       expect(song.reload.main_mix).to eq(mix)
     end
 
     it "nullifies main_mix when the artefact is destroyed" do
       song = create(:song)
-      mix = create(:artefact, song: song, artefact_type: :mix)
+      mix = create(:artefact, song: song)
       song.update!(main_mix: mix)
       mix.destroy
       expect(song.reload.main_mix).to be_nil
@@ -65,18 +65,10 @@ RSpec.describe Song, type: :model do
     it "is invalid if main_mix does not belong to the song" do
       song = create(:song)
       other_song = create(:song, creator: create(:user))
-      mix = create(:artefact, song: other_song, artefact_type: :mix)
+      mix = create(:artefact, song: other_song)
       song.main_mix = mix
       expect(song).not_to be_valid
       expect(song.errors[:main_mix]).to include("must belong to this song")
-    end
-
-    it "is invalid if main_mix is not a mix type" do
-      song = create(:song)
-      contribution = create(:artefact, song: song, artefact_type: :contribution)
-      song.main_mix = contribution
-      expect(song).not_to be_valid
-      expect(song.errors[:main_mix]).to include("must be a mix")
     end
   end
 
