@@ -15,5 +15,21 @@
       span.label-text Notes
     = f.text_area :notes, class: "textarea textarea-bordered w-full", rows: 4
 
+  .grid.grid-cols-2.gap-4
+    .form-control
+      = f.label :key, class: "label"
+        span.label-text Key
+      = f.text_field :key, class: "input input-bordered w-full", placeholder: "e.g. Am, C#"
+
+    .form-control
+      = f.label :tempo, class: "label"
+        span.label-text Tempo (BPM)
+      = f.number_field :tempo, class: "input input-bordered w-full", placeholder: "e.g. 120", step: "any", min: "1"
+
+  .form-control
+    = f.label :lyrics, class: "label"
+      span.label-text Lyrics
+    = f.text_area :lyrics, class: "textarea textarea-bordered w-full", rows: 6, placeholder: "Lyrics or lyric ideas..."
+
   .form-control.mt-6
     = f.submit class: "btn btn-primary"

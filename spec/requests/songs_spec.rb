@@ -31,6 +31,14 @@ RSpec.describe "Songs", type: :request do
       expect(response.body).to include("Smoke on the Water")
       expect(response.body).to include("Classic riff")
     end
+
+    it "displays song metadata when present" do
+      song = create(:song, title: "Riff Song", key: "Am", tempo: 120, lyrics: "La la la", creator: user)
+      get song_path(song)
+      expect(response.body).to include("Am")
+      expect(response.body).to include("120")
+      expect(response.body).to include("La la la")
+    end
   end
 
   describe "GET /songs/new" do
@@ -46,6 +54,14 @@ RSpec.describe "Songs", type: :request do
         expect {
           post songs_path, params: { song: { title: "New Song", notes: "Some notes" } }
         }.to change(Song, :count).by(1)
+      end
+
+      it "creates a song with metadata" do
+        post songs_path, params: { song: { title: "Jam", key: "Dm", tempo: 95, lyrics: "Words" } }
+        song = Song.last
+        expect(song.key).to eq("Dm")
+        expect(song.tempo).to eq(95)
+        expect(song.lyrics).to eq("Words")
       end
 
       it "assigns the current user as creator" do
@@ -88,6 +104,14 @@ RSpec.describe "Songs", type: :request do
       it "updates the song" do
         patch song_path(song), params: { song: { title: "New Title" } }
         expect(song.reload.title).to eq("New Title")
+      end
+
+      it "updates the song metadata" do
+        patch song_path(song), params: { song: { key: "Em", tempo: 140, lyrics: "Some lyrics" } }
+        song.reload
+        expect(song.key).to eq("Em")
+        expect(song.tempo).to eq(140)
+        expect(song.lyrics).to eq("Some lyrics")
       end
 
       it "redirects to the song" do

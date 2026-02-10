@@ -80,6 +80,51 @@ RSpec.describe Song, type: :model do
     end
   end
 
+  describe "metadata fields" do
+    it "accepts a key" do
+      song = create(:song, key: "Am")
+      expect(song.reload.key).to eq("Am")
+    end
+
+    it "accepts a tempo" do
+      song = create(:song, tempo: 120)
+      expect(song.reload.tempo).to eq(120)
+    end
+
+    it "accepts lyrics" do
+      song = create(:song, lyrics: "Hello world\nSecond line")
+      expect(song.reload.lyrics).to eq("Hello world\nSecond line")
+    end
+
+    it "allows all metadata fields to be nil" do
+      song = build(:song, key: nil, tempo: nil, lyrics: nil)
+      expect(song).to be_valid
+    end
+
+    it "is invalid if tempo is not a number" do
+      song = build(:song, tempo: "fast")
+      expect(song).not_to be_valid
+      expect(song.errors[:tempo]).to include("is not a number")
+    end
+
+    it "is invalid if tempo is zero" do
+      song = build(:song, tempo: 0)
+      expect(song).not_to be_valid
+      expect(song.errors[:tempo]).to include("must be greater than 0")
+    end
+
+    it "is invalid if tempo is negative" do
+      song = build(:song, tempo: -10)
+      expect(song).not_to be_valid
+      expect(song.errors[:tempo]).to include("must be greater than 0")
+    end
+
+    it "allows decimal tempo values" do
+      song = create(:song, tempo: 128.5)
+      expect(song.reload.tempo).to eq(128.5)
+    end
+  end
+
   describe "default scope" do
     it "orders by most recently updated first" do
       user = create(:user)
