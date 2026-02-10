@@ -48,70 +48,66 @@
 
 h2.text-xl.font-semibold.mb-4 Artefacts
 
-- %w[mix contribution master].each do |type|
-  - artefacts = @song.artefacts.top_level.where(artefact_type: Artefact.artefact_types[type])
-  - if artefacts.any?
-    .mb-6
-      h3.text-sm.font-semibold.uppercase.tracking-wide.opacity-70.mb-2 = type.pluralize.titleize
-      .space-y-3
-        - artefacts.each do |artefact|
-          .card.bg-base-200 class=("ring-1 ring-primary" if artefact == @song.main_mix)
-            .card-body.p-4
-              .flex.justify-between.items-start
-                div
-                  .flex.items-center.gap-2
-                    .font-medium = artefact.title
-                    - if artefact == @song.main_mix
-                      span.badge.badge-primary.badge-sm main mix
-                  - if artefact.notes.present?
-                    p.text-sm.opacity-70.mt-1 = artefact.notes
-                .flex.gap-1.flex-shrink-0
-                  - if artefact.mix? && artefact != @song.main_mix
-                    = button_to "Set as main mix", song_main_mix_path(@song), params: { artefact_id: artefact.id }, method: :patch, class: "btn btn-ghost btn-xs"
-                  = button_to "Delete", song_artefact_path(@song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
-              - if artefact.audio.attached?
-                .mt-3
-                  audio controls="" preload="metadata" class="w-full"
-                    source src=url_for(artefact.audio) type=artefact.audio.content_type
-              /! Child artefacts
-              - if artefact.children.any?
-                details.mt-3
-                  summary.cursor-pointer.text-sm.opacity-70.select-none
-                    | #{artefact.children.size} attached #{"artefact".pluralize(artefact.children.size)}
-                  .ml-4.mt-2.space-y-2
-                    - artefact.children.each do |child|
-                      .card.bg-base-300
-                        .card-body.p-3
-                          .flex.justify-between.items-start
-                            div
-                              .flex.items-center.gap-2
-                                .font-medium.text-sm = child.title
-                                span.badge.badge-ghost.badge-xs = child.artefact_type.titleize
-                              - if child.notes.present?
-                                p.text-xs.opacity-70.mt-1 = child.notes
-                            .flex.gap-1.flex-shrink-0
-                              = button_to "Delete", song_artefact_path(@song, child), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
-                          - if child.audio.attached?
-                            .mt-2
-                              audio controls="" preload="metadata" class="w-full"
-                                source src=url_for(child.audio) type=child.audio.content_type
-              /! Artefact comments
-              - if artefact.comments.any? || true
-                details.mt-3
-                  summary.cursor-pointer.text-sm.opacity-70.select-none
-                    - count = artefact.comments.size
-                    - if count > 0
-                      | #{count} #{"comment".pluralize(count)}
-                    - else
-                      | Comments
-                  .mt-2
-                    div id=dom_id(artefact, :comments)
-                      - artefact.comments.each do |comment|
-                        div id=dom_id(comment)
-                          .chat class=("chat-end" if comment.user == current_user) class=("chat-start" unless comment.user == current_user)
-                            = render "comments/comment", comment: comment
-                    .mt-2 id=dom_id(artefact, :comment_form)
-                      = render "comments/form", url: song_artefact_comments_path(@song, artefact), placeholder: "Comment on this artefact..."
+- artefacts = @song.artefacts.top_level
+- if artefacts.any?
+  .space-y-3
+    - artefacts.each do |artefact|
+      .card.bg-base-200 class=("ring-1 ring-primary" if artefact == @song.main_mix)
+        .card-body.p-4
+          .flex.justify-between.items-start
+            div
+              .flex.items-center.gap-2
+                .font-medium = artefact.title
+                - if artefact == @song.main_mix
+                  span.badge.badge-primary.badge-sm main mix
+              - if artefact.notes.present?
+                p.text-sm.opacity-70.mt-1 = artefact.notes
+            .flex.gap-1.flex-shrink-0
+              - if artefact != @song.main_mix
+                = button_to "Set as main mix", song_main_mix_path(@song), params: { artefact_id: artefact.id }, method: :patch, class: "btn btn-ghost btn-xs"
+              = button_to "Delete", song_artefact_path(@song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
+          - if artefact.audio.attached?
+            .mt-3
+              audio controls="" preload="metadata" class="w-full"
+                source src=url_for(artefact.audio) type=artefact.audio.content_type
+          /! Child artefacts
+          - if artefact.children.any?
+            details.mt-3
+              summary.cursor-pointer.text-sm.opacity-70.select-none
+                | #{artefact.children.size} attached #{"artefact".pluralize(artefact.children.size)}
+              .ml-4.mt-2.space-y-2
+                - artefact.children.each do |child|
+                  .card.bg-base-300
+                    .card-body.p-3
+                      .flex.justify-between.items-start
+                        div
+                          .flex.items-center.gap-2
+                            .font-medium.text-sm = child.title
+                          - if child.notes.present?
+                            p.text-xs.opacity-70.mt-1 = child.notes
+                        .flex.gap-1.flex-shrink-0
+                          = button_to "Delete", song_artefact_path(@song, child), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
+                      - if child.audio.attached?
+                        .mt-2
+                          audio controls="" preload="metadata" class="w-full"
+                            source src=url_for(child.audio) type=child.audio.content_type
+          /! Artefact comments
+          - if artefact.comments.any? || true
+            details.mt-3
+              summary.cursor-pointer.text-sm.opacity-70.select-none
+                - count = artefact.comments.size
+                - if count > 0
+                  | #{count} #{"comment".pluralize(count)}
+                - else
+                  | Comments
+              .mt-2
+                div id=dom_id(artefact, :comments)
+                  - artefact.comments.each do |comment|
+                    div id=dom_id(comment)
+                      .chat class=("chat-end" if comment.user == current_user) class=("chat-start" unless comment.user == current_user)
+                        = render "comments/comment", comment: comment
+                .mt-2 id=dom_id(artefact, :comment_form)
+                  = render "comments/form", url: song_artefact_comments_path(@song, artefact), placeholder: "Comment on this artefact..."
 
 /! Song comments
 .divider
@@ -145,13 +141,8 @@ h3.text-lg.font-semibold.mb-4 Upload Artefact
 
   .form-control
     label.label
-      span.label-text Type
-    = f.select :artefact_type, Artefact.artefact_types.keys.map { |t| [t.titleize, t] }, {}, class: "select select-bordered w-full"
-
-  .form-control
-    label.label
       span.label-text Attach to (optional)
-    = f.select :parent_id, @parent_artefacts.map { |a| ["#{a.title} (#{a.artefact_type.titleize})", a.id] }, { include_blank: "None (top-level)" }, class: "select select-bordered w-full"
+    = f.select :parent_id, @parent_artefacts.map { |a| [a.title, a.id] }, { include_blank: "None (top-level)" }, class: "select select-bordered w-full"
 
   .form-control
     label.label
