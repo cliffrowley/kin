@@ -36,13 +36,7 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       visit login_path
       click_button "Sign in with Google"
 
-      # Create a song to trigger a notice toast, then delete it
-      visit songs_path
-      click_link "New song"
-      fill_in "Title", with: "Test Song"
-      click_button "Create Song"
-
-      # Now sign out to get a different toast
+      # Sign out to trigger a toast
       click_button "Sign out"
 
       # Toast should be visible initially
