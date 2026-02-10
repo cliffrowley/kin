@@ -1,0 +1,12 @@
+.divider
+
+h2.text-xl.font-semibold.mb-4 Discussion
+
+div id=dom_id(song, :comments)
+  - song.comments.each do |comment|
+    div id=dom_id(comment)
+      .chat class=("chat-end" if comment.user == current_user) class=("chat-start" unless comment.user == current_user)
+        = render "comments/comment", comment: comment
+
+.mt-4 id=dom_id(song, :comment_form)
+  = render "comments/form", url: song_comments_path(song), placeholder: "Comment on this song..."

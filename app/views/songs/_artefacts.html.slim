@@ -1,0 +1,13 @@
+.divider
+
+h2.text-xl.font-semibold.mb-4 Artefacts
+
+- artefacts = song.artefacts.top_level
+
+.flex.flex-col.gap-4 id=dom_id(song, :artefacts)
+  - if artefacts.any?
+    = render artefacts
+
+.mt-4
+  = turbo_frame_tag dom_id(song, :new_artefact) do
+    = link_to "Add artefact", new_song_artefact_path(song), class: "btn btn-ghost btn-sm", data: { turbo_frame: dom_id(song, :new_artefact) }
