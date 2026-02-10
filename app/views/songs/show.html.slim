@@ -52,9 +52,8 @@ h2.text-xl.font-semibold.mb-4 Artefacts
 
 div id=dom_id(@song, :artefacts)
   - if artefacts.any?
-    .space-y-3
-      - artefacts.each do |artefact|
-        = render "artefacts/artefact", artefact: artefact
+    .flex.flex-col.space-y-3
+      = render artefacts
 
 .mt-4
   = turbo_frame_tag dom_id(@song, :new_artefact) do
