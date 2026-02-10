@@ -23,6 +23,26 @@ RSpec.describe Song, type: :model do
 
       expect { song.destroy }.to change(Artefact, :count).by(-1)
     end
+
+    it "has an optional main_mix reference to an artefact" do
+      song = create(:song)
+      expect(song.main_mix).to be_nil
+    end
+
+    it "can have a main mix set" do
+      song = create(:song)
+      mix = create(:artefact, song: song, artefact_type: :mix)
+      song.update!(main_mix: mix)
+      expect(song.reload.main_mix).to eq(mix)
+    end
+
+    it "nullifies main_mix when the artefact is destroyed" do
+      song = create(:song)
+      mix = create(:artefact, song: song, artefact_type: :mix)
+      song.update!(main_mix: mix)
+      mix.destroy
+      expect(song.reload.main_mix).to be_nil
+    end
   end
 
   describe "validations" do
@@ -40,6 +60,23 @@ RSpec.describe Song, type: :model do
     it "is invalid without a creator" do
       song = build(:song, creator: nil)
       expect(song).not_to be_valid
+    end
+
+    it "is invalid if main_mix does not belong to the song" do
+      song = create(:song)
+      other_song = create(:song, creator: create(:user))
+      mix = create(:artefact, song: other_song, artefact_type: :mix)
+      song.main_mix = mix
+      expect(song).not_to be_valid
+      expect(song.errors[:main_mix]).to include("must belong to this song")
+    end
+
+    it "is invalid if main_mix is not a mix type" do
+      song = create(:song)
+      contribution = create(:artefact, song: song, artefact_type: :contribution)
+      song.main_mix = contribution
+      expect(song).not_to be_valid
+      expect(song.errors[:main_mix]).to include("must be a mix")
     end
   end
 
