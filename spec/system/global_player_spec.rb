@@ -31,6 +31,9 @@ RSpec.describe "Global audio player", type: :system, js: true do
   it "shows the global player bar when a play button is clicked" do
     visit song_path(song)
 
+    # Wait for the song page to fully render
+    expect(page).to have_text("Main Mix")
+
     # Player bar should be hidden initially
     expect(page).not_to have_css("#global-player:not(.hidden)")
 
@@ -47,6 +50,9 @@ RSpec.describe "Global audio player", type: :system, js: true do
   it "has play buttons instead of inline audio elements" do
     visit song_path(song)
 
+    # Wait for the song page to fully render
+    expect(page).to have_text("Main Mix")
+
     # Should not have inline audio elements
     expect(page).not_to have_css("audio[controls]")
 
@@ -56,6 +62,9 @@ RSpec.describe "Global audio player", type: :system, js: true do
 
   it "persists playback across page navigation" do
     visit song_path(song)
+
+    # Wait for the song page to fully render
+    expect(page).to have_text("Main Mix")
 
     # Start playback
     find("[data-action='click->play-button#play']", match: :first).click
@@ -74,6 +83,9 @@ RSpec.describe "Global audio player", type: :system, js: true do
 
   it "shows a play/pause toggle button in the player" do
     visit song_path(song)
+
+    # Wait for the song page to fully render
+    expect(page).to have_text("Main Mix")
 
     find("[data-action='click->play-button#play']", match: :first).click
 
