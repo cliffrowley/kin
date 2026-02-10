@@ -31,7 +31,7 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       expect(page).not_to have_text("Signed in successfully.", wait: 5)
     end
 
-    it "auto-dismisses alert toast after a few seconds" do
+    it "auto-dismisses notice toast after signing out" do
       # Sign in first
       visit login_path
       click_button "Sign in with Google"

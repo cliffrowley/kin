@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-/* Toast fade-out animation */
+/* Toast fade-out animation
+ * Duration must match fadeOutDuration default in toast_controller.js (300ms)
+ */
 .toast-fade-out {
   opacity: 0;
   transition: opacity 0.3s ease-out;
