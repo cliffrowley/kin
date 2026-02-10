@@ -1,11 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static values = {
+    dismissDelay: { type: Number, default: 3000 },
+    fadeOutDuration: { type: Number, default: 300 }
+  }
+
   connect() {
-    // Auto-dismiss toast after 3 seconds
+    // Auto-dismiss toast after specified delay
     this.timeoutId = setTimeout(() => {
       this.dismiss()
-    }, 3000)
+    }, this.dismissDelayValue)
   }
 
   disconnect() {
@@ -22,6 +27,6 @@ export default class extends Controller {
     // Remove element after transition completes
     setTimeout(() => {
       this.element.remove()
-    }, 300)
+    }, this.fadeOutDurationValue)
   }
 }

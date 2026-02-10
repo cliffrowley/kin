@@ -27,11 +27,8 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       # Toast should be visible initially
       expect(page).to have_text("Signed in successfully.")
 
-      # Wait for auto-dismiss (3 seconds + fade-out time)
-      sleep 4
-
-      # Toast should be gone
-      expect(page).not_to have_text("Signed in successfully.")
+      # Wait for auto-dismiss (3 seconds + fade-out time + buffer)
+      expect(page).not_to have_text("Signed in successfully.", wait: 5)
     end
 
     it "auto-dismisses alert toast after a few seconds" do
@@ -51,11 +48,8 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       # Toast should be visible initially
       expect(page).to have_text("Signed out.")
 
-      # Wait for auto-dismiss
-      sleep 4
-
-      # Toast should be gone
-      expect(page).not_to have_text("Signed out.")
+      # Wait for auto-dismiss (3 seconds + fade-out time + buffer)
+      expect(page).not_to have_text("Signed out.", wait: 5)
     end
   end
 end
