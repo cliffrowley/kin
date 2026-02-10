@@ -11,7 +11,7 @@
             p.text-sm.opacity-70.mt-1 = artefact.notes
         .flex.gap-1.flex-shrink-0
           - if artefact.parent.nil? && artefact != artefact.song.main_artefact
-            = button_to "Set as main artefact", song_main_artefact_path(artefact.song), params: { artefact_id: artefact.id }, method: :patch, class: "btn btn-ghost btn-xs"
+            = button_to "Set as main artefact", song_main_artefact_path(artefact.song), params: { artefact_id: artefact.id }, method: :patch, class: "btn btn-ghost btn-xs", data: { turbo_frame: "_top" }
           = link_to "Edit", edit_song_artefact_path(artefact.song, artefact), class: "btn btn-ghost btn-xs"
           = button_to "Delete", song_artefact_path(artefact.song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
       - if artefact.audio.attached?
