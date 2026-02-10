@@ -28,7 +28,7 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       expect(page).to have_text("Signed in successfully.")
 
       # Wait for auto-dismiss (short in test: 50ms dismiss + 10ms fade)
-      expect(page).not_to have_text("Signed in successfully.", wait: 2)
+      expect(page).not_to have_text("Signed in successfully.", wait: 0.5)
     end
 
     it "auto-dismisses notice toast after signing out" do
@@ -37,7 +37,7 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       click_button "Sign in with Google"
 
       # Wait for the sign-in toast to be fully removed from the DOM
-      expect(page).not_to have_css(".toast", wait: 2)
+      expect(page).not_to have_css(".toast", wait: 0.5)
 
       # Sign out to trigger a toast
       click_button "Sign out"
@@ -46,7 +46,7 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       expect(page).to have_text("Signed out.")
 
       # Wait for auto-dismiss (short in test: 50ms dismiss + 10ms fade)
-      expect(page).not_to have_text("Signed out.", wait: 2)
+      expect(page).not_to have_text("Signed out.", wait: 0.5)
     end
   end
 end
