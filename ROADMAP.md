@@ -44,9 +44,9 @@ Artefact hierarchy, comments, and song metadata.
   - [x] Comment thread UI on song and artefact detail
   - [x] Turbo Streams for live comment updates
 
-- [ ] **Song Metadata**
-  - [ ] Add key, tempo (BPM), and lyrics fields to Song
-  - [ ] Editable on song detail page
+- [x] **Song Metadata**
+  - [x] Add key, tempo (BPM), and lyrics fields to Song
+  - [x] Editable on song detail page
 
 ---
 
