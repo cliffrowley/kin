@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :user do
-    name { "Test User" }
-    email { "test@example.com" }
+    sequence(:name) { |n| "Test User #{n}" }
+    sequence(:email) { |n| "test#{n}@example.com" }
     provider { "google_oauth2" }
-    uid { "123456789" }
+    sequence(:uid) { |n| "uid_#{n}" }
   end
 end

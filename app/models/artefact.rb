@@ -1,5 +1,6 @@
 class Artefact < ApplicationRecord
   belongs_to :song
+  has_one :main_mix_song, class_name: "Song", foreign_key: :main_mix_id, dependent: :nullify
 
   has_one_attached :audio
 
