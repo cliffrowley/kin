@@ -3,13 +3,17 @@ import { Controller } from "@hotwired/stimulus"
 // Manages theme switching with DaisyUI theme-controller radios.
 // Supports system (prefers-color-scheme), light, and dark.
 // Persists the user's choice in localStorage.
+//
+// NOTE: An inline <script> in app/views/layouts/application.html.slim duplicates
+// the theme-restoration logic to prevent FOUC. If you change STORAGE_KEY or the
+// theme-application logic (e.g. how 'system' is handled), update that script too.
 export default class extends Controller {
   static targets = ["radio", "iconLight", "iconDark"]
 
   static STORAGE_KEY = "kin-theme"
 
   connect() {
-    const saved = localStorage.getItem(this.constructor.STORAGE_KEY) || "system"
+    const saved = this.#readStorage() || "system"
     this.mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
     this.handleSystemChange = () => this.updateIcon()
     this.mediaQuery.addEventListener("change", this.handleSystemChange)
@@ -24,7 +28,7 @@ export default class extends Controller {
     const value = event.target.value
     const theme = value || "system"
     this.applyTheme(theme)
-    localStorage.setItem(this.constructor.STORAGE_KEY, theme)
+    this.#writeStorage(theme)
     document.activeElement?.blur()
   }
 
@@ -57,5 +61,21 @@ export default class extends Controller {
     if (this.currentSetting === "light") return false
     // system: check OS preference
     return this.mediaQuery?.matches ?? true
+  }
+
+  #readStorage() {
+    try {
+      return localStorage.getItem(this.constructor.STORAGE_KEY)
+    } catch {
+      return null
+    }
+  }
+
+  #writeStorage(value) {
+    try {
+      localStorage.setItem(this.constructor.STORAGE_KEY, value)
+    } catch {
+      // Storage unavailable — theme still works, just won't persist
+    }
   }
 }
