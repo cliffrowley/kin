@@ -24,6 +24,6 @@ class ArtefactsController < ApplicationController
   end
 
   def artefact_params
-    params.require(:artefact).permit(:title, :artefact_type, :notes, :audio)
+    params.require(:artefact).permit(:title, :artefact_type, :notes, :audio, :parent_id)
   end
 end
