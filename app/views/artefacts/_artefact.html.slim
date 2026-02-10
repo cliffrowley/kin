@@ -16,8 +16,10 @@
           = button_to "Delete", song_artefact_path(artefact.song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
       - if artefact.audio.attached?
         .mt-3
-          audio controls="" preload="metadata" class="w-full"
-            source src=url_for(artefact.audio) type=artefact.audio.content_type
+          button.btn.btn-ghost.btn-sm.gap-2 data-controller="play-button" data-action="click->play-button#play" data-play-button-url-value=url_for(artefact.audio) data-play-button-title-value="#{artefact.song.title} — #{artefact.title}"
+            svg.w-4.h-4.fill-current xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              path d="M8 5v14l11-7z"
+            | Play
       /! Child artefacts
       - if artefact.children.any?
         .ml-4.mt-3.space-y-2

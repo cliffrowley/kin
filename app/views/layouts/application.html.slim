@@ -42,5 +42,26 @@ html data-theme="dark"
         .alert.alert-warning
           span = flash[:alert]
 
-    main.container.mx-auto.mt-8.px-5
+    main.container.mx-auto.mt-8.px-5.pb-24
       = yield
+
+    /! Global audio player — persists across Turbo navigations
+    - if logged_in?
+      #global-player.fixed.bottom-0.left-0.right-0.bg-base-200.border-t.border-base-300.z-50.hidden data-turbo-permanent="" data-controller="player"
+        .container.mx-auto.px-5.py-3.flex.items-center.gap-4
+          /! Play/pause button
+          button.btn.btn-circle.btn-sm.btn-primary data-player-target="playPauseButton" data-action="click->player#togglePlayPause"
+            svg.w-4.h-4.fill-current data-player-target="playIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              path d="M8 5v14l11-7z"
+            svg.w-4.h-4.fill-current.hidden data-player-target="pauseIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"
+          /! Track info
+          .flex.flex-col.min-w-0.flex-shrink
+            span.text-sm.font-medium.truncate data-player-target="trackTitle" &nbsp;
+          /! Progress bar
+          .flex.items-center.gap-2.flex-1
+            span.text-xs.opacity-70.tabular-nums data-player-target="currentTime" 0:00
+            input.range.range-primary.range-xs.flex-1 type="range" min="0" max="100" value="0" step="0.1" data-player-target="progressBar" data-action="input->player#seek"
+            span.text-xs.opacity-70.tabular-nums data-player-target="duration" 0:00
+          /! Hidden audio element
+          audio preload="metadata" data-player-target="audio"
