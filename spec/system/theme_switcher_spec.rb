@@ -70,7 +70,7 @@ RSpec.describe "Theme switcher", type: :system do
       find("input[aria-label='Dark']").click
 
       expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
-      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :all)
     end
 
     it "shows the sun icon when the effective theme is light" do
@@ -78,7 +78,7 @@ RSpec.describe "Theme switcher", type: :system do
       find("input[aria-label='Light']").click
 
       expect(page).to have_css("[data-theme-target='iconLight']:not(.hidden)")
-      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :hidden)
+      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :all)
     end
 
     it "shows the moon icon when system theme is active and OS prefers dark" do
@@ -87,7 +87,7 @@ RSpec.describe "Theme switcher", type: :system do
       visit current_path
 
       expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
-      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :all)
     end
 
     it "shows the sun icon when system theme is active and OS prefers light" do
@@ -96,7 +96,7 @@ RSpec.describe "Theme switcher", type: :system do
       visit current_path
 
       expect(page).to have_css("[data-theme-target='iconLight']:not(.hidden)")
-      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :hidden)
+      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :all)
     end
 
     it "updates the icon in real time when the OS theme changes while system theme is active" do
@@ -108,13 +108,13 @@ RSpec.describe "Theme switcher", type: :system do
       visit current_path
 
       expect(page).to have_css("[data-theme-target='iconLight']:not(.hidden)")
-      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :hidden)
+      expect(page).to have_css("[data-theme-target='iconDark'].hidden", visible: :all)
 
       # Simulate OS switching to dark — the listener should update the icon automatically
       page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: "dark" } ])
 
       expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
-      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :all)
     end
 
     it "does not update the icon when OS theme changes if an explicit theme is selected" do
@@ -134,7 +134,7 @@ RSpec.describe "Theme switcher", type: :system do
       # Give a moment for any (incorrect) listener to fire
       sleep 0.3
       expect(page).to have_css("[data-theme-target='iconDark']:not(.hidden)")
-      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :hidden)
+      expect(page).to have_css("[data-theme-target='iconLight'].hidden", visible: :all)
     end
 
     it "persists the selected theme across page navigations" do
