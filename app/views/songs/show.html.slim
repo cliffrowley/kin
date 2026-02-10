@@ -15,6 +15,19 @@
 .text-xs.opacity-50.mb-8
   | Added by #{@song.creator.name} · Updated #{time_ago_in_words(@song.updated_at)} ago
 
+/! Main Mix section
+- if @song.main_mix.present?
+  .card.bg-primary.bg-opacity-10.border.border-primary.mb-6
+    .card-body.p-4
+      .flex.justify-between.items-center.mb-2
+        .flex.items-center.gap-2
+          span.badge.badge-primary Main Mix
+          span.font-semibold = @song.main_mix.title
+        = button_to "Clear", song_main_mix_path(@song), method: :delete, class: "btn btn-ghost btn-xs", data: { turbo_confirm: "Clear the main mix?" }
+      - if @song.main_mix.audio.attached?
+        audio controls="" preload="metadata" class="w-full"
+          source src=url_for(@song.main_mix.audio) type=@song.main_mix.audio.content_type
+
 /! Artefacts section
 .divider
 
@@ -27,14 +40,19 @@ h2.text-xl.font-semibold.mb-4 Artefacts
       h3.text-sm.font-semibold.uppercase.tracking-wide.opacity-70.mb-2 = type.pluralize.titleize
       .space-y-3
         - artefacts.each do |artefact|
-          .card.bg-base-200
+          .card.bg-base-200 class=("ring-1 ring-primary" if artefact == @song.main_mix)
             .card-body.p-4
               .flex.justify-between.items-start
                 div
-                  .font-medium = artefact.title
+                  .flex.items-center.gap-2
+                    .font-medium = artefact.title
+                    - if artefact == @song.main_mix
+                      span.badge.badge-primary.badge-sm main mix
                   - if artefact.notes.present?
                     p.text-sm.opacity-70.mt-1 = artefact.notes
-                .flex-shrink-0
+                .flex.gap-1.flex-shrink-0
+                  - if artefact.mix? && artefact != @song.main_mix
+                    = button_to "Set as main mix", song_main_mix_path(@song), params: { artefact_id: artefact.id }, method: :patch, class: "btn btn-ghost btn-xs"
                   = button_to "Delete", song_artefact_path(@song, artefact), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Delete this artefact?" }
               - if artefact.audio.attached?
                 .mt-3

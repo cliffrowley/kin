@@ -19,5 +19,6 @@ Rails.application.routes.draw do
 
   resources :songs do
     resources :artefacts, only: %i[create destroy]
+    resource :main_mix, only: %i[update destroy]
   end
 end
