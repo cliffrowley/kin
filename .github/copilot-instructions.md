@@ -67,6 +67,7 @@ Artefacts may be **attached** to other artefacts (derivation/support relationshi
 - Follow Rails 8 conventions and defaults
 - Use Rails Omakase RuboCop style (see `rubocop-rails-omakase`)
 - Use `config.load_defaults 8.0` conventions
+- Use `:unprocessable_content` (status 422) instead of `:unprocessable_entity`, which is deprecated by Rack
 - Place application code under standard Rails directories
 - Use `lib/` for non-autoloaded code (tasks, etc.); autoloaded via `config.autoload_lib`
 
