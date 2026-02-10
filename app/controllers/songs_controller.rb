@@ -6,6 +6,7 @@ class SongsController < ApplicationController
   end
 
   def show
+    @artefact = @song.artefacts.build
   end
 
   def new
