@@ -20,6 +20,13 @@ RSpec.describe "Artefacts", type: :request do
       expect(response.body).to include("parent_id")
       expect(response.body).to include(parent.id.to_s)
     end
+
+    it "works with a deeply nested parent artefact" do
+      level1 = create(:artefact, artefactable: song)
+      level2 = create(:artefact, artefactable: level1)
+      get new_song_artefact_path(song, parent_id: level2.id), headers: { "Turbo-Frame" => "new_artefact_for_artefact_#{level2.id}" }
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "POST /songs/:song_id/artefacts" do
@@ -77,6 +84,16 @@ RSpec.describe "Artefacts", type: :request do
         expect(child.artefactable).to eq(parent)
       end
 
+      it "creates an artefact with a deeply nested parent" do
+        level1 = create(:artefact, artefactable: song)
+        level2 = create(:artefact, artefactable: level1)
+        post song_artefacts_path(song), params: {
+          artefact: { title: "Deep Child", parent_id: level2.id }
+        }
+        child = Artefact.find_by(title: "Deep Child")
+        expect(child.artefactable).to eq(level2)
+      end
+
       it "creates an artefact without a parent" do
         post song_artefacts_path(song), params: {
           artefact: { title: "Standalone Mix" }
@@ -108,6 +125,15 @@ RSpec.describe "Artefacts", type: :request do
       artefact = create(:artefact, artefactable: song)
       expect {
         delete song_artefact_path(song, artefact)
+      }.to change(Artefact, :count).by(-1)
+    end
+
+    it "destroys a deeply nested artefact" do
+      level1 = create(:artefact, artefactable: song)
+      level2 = create(:artefact, artefactable: level1)
+      level3 = create(:artefact, artefactable: level2)
+      expect {
+        delete song_artefact_path(song, level3)
       }.to change(Artefact, :count).by(-1)
     end
 

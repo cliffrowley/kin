@@ -2,12 +2,12 @@ class ArtefactsController < ApplicationController
   before_action :set_song
 
   def new
-    @parent = @song.artefacts.find(params[:parent_id]) if params[:parent_id].present?
+    @parent = find_song_artefact(params[:parent_id]) if params[:parent_id].present?
     @artefact = (@parent || @song).artefacts.build
   end
 
   def create
-    @parent = @song.artefacts.find(params[:artefact][:parent_id]) if params[:artefact][:parent_id].present?
+    @parent = find_song_artefact(params[:artefact][:parent_id]) if params[:artefact][:parent_id].present?
     @artefactable = @parent || @song
     @artefact = @artefactable.artefacts.build(artefact_params)
 
@@ -22,7 +22,7 @@ class ArtefactsController < ApplicationController
   end
 
   def destroy
-    @artefact = @song.all_artefacts.find(params[:id])
+    @artefact = find_song_artefact(params[:id])
     @artefact.destroy
 
     respond_to do |format|
@@ -35,6 +35,12 @@ class ArtefactsController < ApplicationController
 
   def set_song
     @song = Song.find(params[:song_id])
+  end
+
+  def find_song_artefact(id)
+    artefact = Artefact.find(id)
+    raise ActiveRecord::RecordNotFound unless artefact.song == @song
+    artefact
   end
 
   def artefact_params
