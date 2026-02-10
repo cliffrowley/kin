@@ -1,5 +1,5 @@
 doctype html
-html data-theme="dark"
+html
   head
     title = content_for(:title) || "KIN"
     meta name="viewport" content="width=device-width,initial-scale=1"
@@ -7,6 +7,10 @@ html data-theme="dark"
     meta name="mobile-web-app-capable" content="yes"
     = csrf_meta_tags
     = csp_meta_tag
+
+    /! Restore saved theme before first paint to prevent FOUC
+    javascript:
+      (function(){var t=localStorage.getItem('kin-theme');if(t&&t!=='system')document.documentElement.setAttribute('data-theme',t)})()
 
     = yield :head
 
@@ -31,7 +35,17 @@ html data-theme="dark"
             = link_to "Songs", songs_path, class: "btn btn-ghost btn-sm"
             = link_to "Users", users_path, class: "btn btn-ghost btn-sm"
         .flex-none.flex.items-center.gap-2
-          / span.text-sm.opacity-70 = current_user.name
+          .dropdown.dropdown-end data-controller="theme"
+            div.btn.btn-ghost.btn-sm tabindex="0" role="button" aria-label="Theme"
+              svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+            ul.dropdown-content.bg-base-300.rounded-box.z-50.w-36.p-2.shadow-2xl tabindex="0"
+              li
+                input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="System" value="" data-theme-target="radio" data-action="change->theme#change"
+              li
+                input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="light" data-theme-target="radio" data-action="change->theme#change"
+              li
+                input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="dark" data-theme-target="radio" data-action="change->theme#change"
           = button_to "Sign out", logout_path, method: :delete, class: "btn btn-ghost btn-sm"
 
     - if flash[:notice]
