@@ -19,11 +19,11 @@ Auth, songs, audio upload & playback.
   - [x] `Song` model (title, notes, timestamps)
   - [x] Songs CRUD controller & views (index, show, new/edit)
 
-- [ ] **Artefacts & Audio Upload**
-  - [ ] `Artefact` model (belongs_to :song, type enum: mix/contribution/master, title, notes)
-  - [ ] Active Storage attachment for audio files
-  - [ ] Upload UI on the song show page
-  - [ ] Inline audio player for playback
+- [x] **Artefacts & Audio Upload**
+  - [x] `Artefact` model (belongs_to :song, type enum: mix/contribution/master, title, notes)
+  - [x] Active Storage attachment for audio files
+  - [x] Upload UI on the song show page
+  - [x] Inline audio player for playback
 
 - [ ] **Main Mix Designation**
   - [ ] Song `has_one :main_mix` reference to an artefact
