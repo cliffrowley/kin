@@ -1,5 +1,5 @@
 doctype html
-html data-theme="dark"
+html
   head
     title = content_for(:title) || "KIN"
     meta name="viewport" content="width=device-width,initial-scale=1"
@@ -7,6 +7,13 @@ html data-theme="dark"
     meta name="mobile-web-app-capable" content="yes"
     = csrf_meta_tags
     = csp_meta_tag
+
+    /! Restore saved theme before first paint to prevent FOUC.
+    /! This intentionally duplicates logic from app/javascript/controllers/theme_controller.js
+    /! (storage key: 'kin-theme', 'system' theme = no data-theme attribute).
+    /! Keep both in sync if the storage key or theme-application logic changes.
+    javascript:
+      (function(){try{var t=localStorage.getItem('kin-theme');if(t&&t!=='system')document.documentElement.setAttribute('data-theme',t)}catch(e){}})()
 
     = yield :head
 
@@ -31,7 +38,21 @@ html data-theme="dark"
             = link_to "Songs", songs_path, class: "btn btn-ghost btn-sm"
             = link_to "Users", users_path, class: "btn btn-ghost btn-sm"
         .flex-none.flex.items-center.gap-2
-          / span.text-sm.opacity-70 = current_user.name
+          .dropdown.dropdown-end data-controller="theme"
+            div.btn.btn-ghost.btn-sm tabindex="0" role="button" aria-label="Theme"
+              /! Light icon (sun)
+              svg.w-5.h-5.hidden data-theme-target="iconLight" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"
+                path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+              /! Dark icon (moon)
+              svg.w-5.h-5 data-theme-target="iconDark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"
+                path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+            ul.dropdown-content.bg-base-300.rounded-box.z-50.w-36.p-2.shadow-2xl tabindex="0"
+              li
+                input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="System" value="" data-theme-target="radio" data-action="change->theme#change"
+              li
+                input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="light" data-theme-target="radio" data-action="change->theme#change"
+              li
+                input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="dark" data-theme-target="radio" data-action="change->theme#change"
           = button_to "Sign out", logout_path, method: :delete, class: "btn btn-ghost btn-sm"
 
     - if flash[:notice]
