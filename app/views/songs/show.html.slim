@@ -1,18 +1,39 @@
 .mb-6
   = link_to "← Back to songs", songs_path, class: "link link-hover text-sm opacity-70"
 
-.flex.justify-between.items-start.mb-4
+.flex.justify-between.items-start.mb-6
   div
     h1.text-2xl.font-bold = @song.title
-    .text-xs.opacity-50.mt-1
-      | Added by #{@song.creator.name} · Updated #{time_ago_in_words(@song.updated_at)} ago
   .flex.gap-2
     = link_to "Edit", edit_song_path(@song), class: "btn btn-ghost btn-sm"
     = button_to "Delete", song_path(@song), method: :delete, class: "btn btn-ghost btn-sm text-error", data: { turbo_confirm: "Are you sure?" }
 
-= render "songs/notes", song: @song
-= render "songs/metadata", song: @song
-= render "songs/lyrics", song: @song
-= render "songs/main_artefact", song: @song
-= render "songs/artefacts", song: @song
-= render "songs/discussion", song: @song
+.grid.grid-cols-12.gap-6.mb-6
+  .col-span-4
+    h2.text-xl.font-semibold.mb-4 Discussion
+    = render "songs/discussion", song: @song
+
+  .col-span-8.order-first
+    - if @song.main_artefact.present?
+      h2.text-xl.font-semibold.mb-4 Main artefact
+      = render "songs/main_artefact", artefact: @song.main_artefact
+
+    - if @song.key.present? || @song.tempo.present?
+      h2.text-xl.font-semibold.mb-4 Metadata
+      = render "songs/metadata", song: @song
+
+    - if @song.notes.present?
+      h2.text-xl.font-semibold.mb-4 Notes
+      = render "songs/notes", song: @song
+
+    - if @song.lyrics.present?
+      h2.text-xl.font-semibold.mb-4 Lyrics
+      = render "songs/lyrics", song: @song
+
+    h2.text-xl.font-semibold.mb-4 Artefacts
+    = render "songs/artefacts", song: @song
+
+.divider
+
+.text-xs.opacity-50
+  | Created #{time_ago_in_words(@song.created_at)} ago · Updated #{time_ago_in_words(@song.updated_at)} ago
