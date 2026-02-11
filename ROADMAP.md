@@ -1,6 +1,6 @@
 # KIN Roadmap
 
-Each phase is independently deployable and delivers real value. Phases 1–4 are the core product; 5–7 are extensions that can be prioritised based on the collective's needs.
+Each phase is independently deployable and delivers real value. Phases 1–5 are the core product; 6–8 are extensions that can be prioritised based on the collective's needs.
 
 ---
 
@@ -50,7 +50,26 @@ Artefact hierarchy, comments, and song metadata.
 
 ---
 
-## Phase 3 — Collections & Navigation
+## Phase 3 — Concept Alignment
+
+Bring the existing implementation in line with the revised concept model.
+
+- [ ] **Rename Main Artefact to Current Artefact**
+  - [ ] Update specs to use `current_artefact` naming
+  - [ ] Rename `main_artefact_id` column to `current_artefact_id` (migration)
+  - [ ] Rename association, validation, and controller/view references
+  - [ ] Rename `main_artefacts_controller` → `current_artefacts_controller` and update routes
+  - [ ] Rename view partials and update UI labels
+
+- [ ] **Artefact Tree UI Refinement**
+  - [ ] Write specs for revised song show page layout
+  - [ ] Song show page emphasises current artefact and its immediate children
+  - [ ] Deeper structure recedes visually but remains navigable
+  - [ ] Previous/next artefact navigation within the tree
+
+---
+
+## Phase 4 — Collections & Navigation
 
 Grouping songs and improving the browsing experience.
 
@@ -67,7 +86,7 @@ Grouping songs and improving the browsing experience.
 
 ---
 
-## Phase 4 — Attention & Surfacing
+## Phase 5 — Attention & Surfacing
 
 Making shared attention visible.
 
@@ -88,7 +107,7 @@ Making shared attention visible.
 
 ---
 
-## Phase 5 — External Sharing
+## Phase 6 — External Sharing
 
 Controlled sharing outside the collective.
 
@@ -104,7 +123,7 @@ Controlled sharing outside the collective.
 
 ---
 
-## Phase 6 — Dropbox Integration
+## Phase 7 — Dropbox Integration
 
 Automated off-site mirror for durable redundancy.
 
@@ -114,7 +133,7 @@ Automated off-site mirror for durable redundancy.
 
 - [ ] **Mirror Sync**
   - [ ] Background job (Solid Queue) to mirror uploads to Dropbox
-  - [ ] Folder structure: `/<Song Title>/<Artefact Type>/<filename>`
+  - [ ] Folder structure: `/<Song Title>/<filename>`
   - [ ] Sync on artefact create/update/delete
 
 - [ ] **Unrecognised File Visibility**
@@ -123,7 +142,7 @@ Automated off-site mirror for durable redundancy.
 
 ---
 
-## Phase 7 — AI Suggestions
+## Phase 8 — AI Suggestions
 
 Optional, on-demand AI assistance for metadata.
 
