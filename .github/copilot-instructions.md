@@ -38,15 +38,15 @@ These principles from `CONCEPT.md` should guide all implementation decisions:
 The core domain concepts are:
 
 - **Users** — members of the collective; all interaction is internal by default
-- **Songs** — the identity of a piece of music; an anchor for related creative work
-- **Artefacts** — audio files associated with a song, typed as:
-  - **Mix** — a listenable representation at a point in time
-  - **Contribution** — an isolated or partial part supporting a mix
-  - **Master** — a release-oriented render
+- **Songs** — a single creative intent or variation; if two versions differ meaningfully in composition, tempo, lyrics, or feel, they are separate Songs
+- **Artefacts** — audio files associated with a song, forming a directed tree:
+  - Each Song has a single **root artefact**
+  - New artefacts attach to existing ones (parent/child), forming branches for revisions, alternatives, or parallel exploration
+  - Artefacts are **untyped** — meaning emerges from position in the tree, recency, naming, and discussion
+  - All artefacts are treated uniformly: they can be listened to, commented on, and have children attached
+- **Current artefact** — the artefact designated as authoritative for listening; what pressing Play defaults to; can move freely through the tree
 - **Collections** — lightweight virtual groupings of songs (personal or shared)
 - **Share Links** — capability-based unguessable URLs for external sharing of a single artefact
-
-Artefacts may be **attached** to other artefacts (derivation/support relationships). A song may have a designated **main mix**.
 
 ## Workflow
 
@@ -122,7 +122,7 @@ KIN treats musical metadata as **human-owned**, not machine-owned. AI is only a 
 
 - Share links are capability-based (unguessable URLs) pointing to a single artefact
 - External viewers can listen only — no browsing, commenting, or collection access
-- External listens are tracked separately from internal attention signals
+- External listening does not affect internal attention signals
 
 ## Development
 
