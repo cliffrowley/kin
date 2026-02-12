@@ -1,3 +1,6 @@
-.card.bg-base-200.mb-6
-  .card-body.p-4
-    p.whitespace-pre-wrap = song.notes
+- if song.notes.present?
+  .card.bg-base-200
+    .card-body
+      h2.card-title Notes
+
+      p.whitespace-pre-wrap = song.notes

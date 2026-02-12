@@ -1,12 +1,21 @@
-.card.bg-primary.bg-opacity-10.border.border-primary.mb-6
-  .card-body.p-4
-    .flex.justify-between.items-center.mb-2
-      .flex.items-center.gap-2
-        span.badge.badge-primary Main Artefact
-        span.font-semibold = artefact.title
-      = button_to "Clear", song_main_artefact_path(artefact.artefactable), method: :delete, class: "btn btn-ghost btn-xs", data: { turbo_confirm: "Clear the main artefact?" }
-    - if artefact.audio.attached?
-      button.btn.btn-primary.btn-sm.gap-2 data-controller="play-button" data-action="click->play-button#play" data-play-button-url-value=url_for(artefact.audio) data-play-button-title-value="#{artefact.artefactable.title} — #{artefact.title}"
-        svg.w-4.h-4.fill-current xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-          path d="M8 5v14l11-7z"
-        | Play
+- if @song.main_artefact.present?
+  .card.bg-base-200
+    .card-body
+      .flex.items-center.justify-between
+        h2.card-title Main artefact
+
+        = button_to song_main_artefact_path(@song), method: :delete, class: "btn btn-ghost btn-xs", data: { turbo_confirm: "Clear the main artefact?" } do
+          svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+            path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          | Clear
+
+      .card.bg-primary/10.border.border-primary
+        .card-body.p-4
+          .flex.justify-between.items-center
+            .flex.items-center.gap-2
+              span.font-semibold = artefact.title
+            - if artefact.audio.attached?
+              button.btn.btn-primary.btn-sm.gap-2 data-controller="play-button" data-action="click->play-button#play" data-play-button-url-value=url_for(artefact.audio) data-play-button-title-value="#{artefact.artefactable.title} — #{artefact.title}"
+                svg.w-4.h-4.fill-current xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                  path d="M8 5v14l11-7z"
+                | Play
