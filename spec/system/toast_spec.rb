@@ -40,7 +40,9 @@ RSpec.describe "Toast auto-dismiss", type: :system do
       expect(page).not_to have_css(".toast", wait: 0.5)
 
       # Sign out to trigger a toast
-      click_button "Sign out"
+      accept_confirm("Sign out of KIN?") do
+        click_button "Sign out"
+      end
 
       # Toast should be visible initially
       expect(page).to have_text("Signed out.")
